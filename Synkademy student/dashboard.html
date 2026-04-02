@@ -1,0 +1,17 @@
+<body onload="checkAuth()">
+
+<h2 id="welcome"></h2>
+<p id="studentId"></p>
+
+<button onclick="logout()">Logout</button>
+
+<script src="js/auth.js"></script>
+<script>
+document.getElementById("welcome").innerText =
+    "Welcome " + getCookie("fullName");
+
+document.getElementById("studentId").innerText =
+    "Student No: " + getCookie("studentNumber");
+</script>
+
+</body>

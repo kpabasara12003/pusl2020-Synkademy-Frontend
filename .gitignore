@@ -1,0 +1,5 @@
+.vscode/
+.idea/
+*.suo
+tmp/
+temp/
