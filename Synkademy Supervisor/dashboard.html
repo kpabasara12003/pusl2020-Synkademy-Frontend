@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Supervisor Dashboard</title>
+
+<style>
+:root {
+  --green: #117F17;
+  --moss: #2BC333;
+  --bg: #f9fbf9;
+  --text: #1b1b1b;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: var(--bg);
+  margin: 0;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h3>Supervisor Dashboard</h3>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+  <div class="card">
+    <h2 id="name"></h2>
+    <p id="email"></p>
+    <p><strong>Role:</strong> Supervisor</p>
+  </div>
+</div>
+
+<script>
+const SESSION_NAME = "synkademy_supervisor_session";
+
+const user = getSession(SESSION_NAME);
+
+if (!user) {
+  window.location.href = "index.html";
+}
+
+document.getElementById("name").innerText = user.fullName;
+document.getElementById("email").innerText = user.email;
+
+function logout() {
+  document.cookie = SESSION_NAME + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  window.location.href = "index.html";
+}
+
+function getSession(name) {
+  const cname = name + "=";
+  const cookies = decodeURIComponent(document.cookie).split(";");
+
+  for (let c of cookies) {
+    c = c.trim();
+    if (c.indexOf(cname) === 0) {
+      return JSON.parse(c.substring(cname.length));
+    }
+  }
+  return null;
+}
+</script>
+
+</body>
+</html>

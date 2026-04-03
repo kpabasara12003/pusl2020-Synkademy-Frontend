@@ -1,13 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synkademy Supervisor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synkademy Supervisor</title>
 
+<style>
+:root {
+  --green: #117F17;
+  --moss: #2BC333;
+  --gold: #fbc02d;
+  --soft: #FADE93;
+  --bg: #f9fbf9;
+  --text: #1b1b1b;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif}
+
+body{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--bg);
+  color:var(--text);
+}
+
+
+</style>
 </head>
 <body>
-    
+
+<div class="container">
+  <h1>Synkademy</h1>
+  <h3>Supervisor Login</h3>
+
+  <form id="loginForm">
+
+    <div class="input-group">
+      <input type="email" id="email" placeholder="Email" required>
+      <img src="https://img.icons8.com/ios-filled/100/user.png">
+    </div>
+
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Password" required>
+      <span class="toggle" id="toggleText" onclick="togglePass()">Show</span>
+      <img src="https://img.icons8.com/ios-filled/100/lock.png">
+    </div>
+
+    <button class="btn" type="submit" id="loginBtn">Login</button>
+    <div class="error" id="errorMsg"></div>
+
+  </form>
+</div>
+
+<script src="auth.js"></script>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", login);
+
+function togglePass(){
+  const p=document.getElementById("password");
+  const t=document.getElementById("toggleText");
+  if(p.type==="password"){p.type="text";t.innerText="Hide";}else{p.type="password";t.innerText="Show";}
+}
+
+</script>
+
 </body>
 </html>
+
