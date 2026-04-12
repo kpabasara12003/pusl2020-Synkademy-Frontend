@@ -1,13 +1,9 @@
-
-const SESSION_NAME = "synkademy_supervisor_session";
-
-(function () {
-  const user = getSession(SESSION_NAME);
-  if (user && window.location.pathname.includes("index")) {
-    window.location.href = "dashboard.html";
+document.addEventListener('DOMContentLoaded', () => {
+  const user = getSession();
+  if (user && window.location.pathname.includes("index.html")) {
+    window.location.href = "pages/dashboard.html";
   }
-})();
-
+});
 
 async function login(e) {
   e.preventDefault();
@@ -34,7 +30,6 @@ async function login(e) {
       body: JSON.stringify({ email, password })
     });
 
-  
     if (!res.ok) {
       let errMsg = "Login failed";
       try { errMsg = await res.text(); } catch {}
@@ -45,17 +40,17 @@ async function login(e) {
     const data = await res.json();
 
     if (!data.role || data.role.toLowerCase() !== "supervisor") {
-      showMessage("Access denied");
+      showMessage("Access denied. Supervisor role required.");
       return;
     }
 
-    setSession(SESSION_NAME, data, 1/24);
+    setSession(SESSION_NAME, data, 1); // 1 day
 
-    window.location.href = "dashboard.html";
+    window.location.href = "pages/dashboard.html";
 
   } catch (err) {
     console.error(err);
-    showMessage("Server error");
+    showMessage("Server error. Please try again.");
   } finally {
     btn.innerText = "Login";
     btn.disabled = false;
@@ -66,30 +61,4 @@ function showMessage(text) {
   const msg = document.getElementById("errorMsg");
   msg.innerText = text;
   msg.style.display = "block";
-}
-
-function setSession(name, value, days) {
-  const d = new Date();
-  d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-
-  document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))};expires=${d.toUTCString()};path=/`;
-}
-
-function getSession(name) {
-  const cname = name + "=";
-  const ca = document.cookie.split(';');
-
-  for (let c of ca) {
-    c = c.trim();
-    if (c.indexOf(cname) === 0) {
-      return JSON.parse(decodeURIComponent(c.substring(cname.length)));
-    }
-  }
-  return null;
-}
-
-function logout() {
-  document.cookie = `${SESSION_NAME}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
-
-  window.location.href = "index.html";
 }
