@@ -513,14 +513,14 @@
     </div>
 
     <div class="profile">
-      <h2>Hi, Amaya Perera</h2>
-      <span>Project Lead | Group 09</span>
-      <span>Research Area: Web Development</span>
+      <h2 id="profileName">Hi, Student</h2>
+      <span id="profileStudentNo">Student Number: -</span>
+      <span id="profileArea">Research Area: Not Set</span>
     </div>
 
     <nav class="nav">
       <a class="active" href="#">Overview <span>Today</span></a>
-      <a href="#">Proposals <span>3</span></a>
+      <a href="proposal.html">Proposals <span>1</span></a>
       <a href="#">Supervisor Match <span>1</span></a>
       <a href="#">Milestones <span>4</span></a>
       <a href="#">Messages <span>2</span></a>
@@ -545,19 +545,19 @@
           <input type="text" placeholder="Search proposals or supervisors">
         </div>
         <button class="pill">Save Draft</button>
-        <button class="pill primary" disabled>New Proposal</button>
+        <a class="pill primary" id="newProposalBtn" href="submit_N.html">New Proposal</a>
       </div>
     </header>
 
     <section class="stats">
       <div class="stat-card">
         <p class="stat-title">Submission Status</p>
-        <p class="stat-value">Under Review</p>
-        <p class="stat-meta">Last updated 2 hours ago</p>
+        <p class="stat-value" id="submissionStatus">Under Review</p>
+        <p class="stat-meta" id="submissionMeta">Last updated 2 hours ago</p>
       </div>
       <div class="stat-card">
         <p class="stat-title">Proposals Sent</p>
-        <p class="stat-value">1</p>
+        <p class="stat-value" id="proposalCount">1</p>
         <p class="stat-meta">Only one proposal allowed</p>
       </div>
       <div class="stat-card">
@@ -635,7 +635,7 @@
       </div>
     </section>
 
-    <section class="panel">
+    <section class="panel" id="proposalsSection">
       <h3>Recent Proposal</h3>
       <table class="table">
         <thead>
@@ -646,7 +646,7 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="proposalTableBody">
           <tr>
             <td>Smart Campus Navigation</td>
             <td>Web Development</td>
@@ -658,7 +658,6 @@
     </section>
 
     <div class="footer">Copyright 2026 Synkademy Student Application</div>
-  </main>
   </main>
 
     <!-- scripts -->

@@ -1,65 +1,170 @@
 const API_BASE_URL = "http://localhost:5037/api/Projects";
+const STUDENT_API_BASE_URL = "http://localhost:5037/api/Students";
 
-// Initialize dashboard with fallback for missing studentId
 function readCookie(name) {
-    const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    const v = document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)");
     return v ? decodeURIComponent(v.pop()) : null;
 }
 
-async function initializeDashboard() {
-    let studentId = sessionStorage.getItem("studentId");
+function setProfileInfo(studentData) {
+    const fullName =
+        studentData?.fullName ||
+        studentData?.name ||
+        readCookie("fullName") ||
+        "Student";
+    const studentNumber =
+        studentData?.studentNumber ||
+        studentData?.studentNo ||
+        readCookie("studentNumber") ||
+        "-";
+    const researchArea =
+        studentData?.researchArea ||
+        studentData?.specialization ||
+        "Not Set";
 
-    // fallback to cookie set by setSession (userId)
-    if (!studentId) studentId = readCookie('userId');
+    const nameEl = document.getElementById("profileName");
+    const studentNoEl = document.getElementById("profileStudentNo");
+    const areaEl = document.getElementById("profileArea");
 
-    if (!studentId) {
-        // not logged in; redirect to login
-        console.warn("Student ID not found in sessionStorage or cookies. Redirecting to login.");
-        window.location.href = "index.html";
-        return;
+    if (nameEl) nameEl.innerText = `Hi, ${fullName}`;
+    if (studentNoEl) studentNoEl.innerText = `Student Number: ${studentNumber}`;
+    if (areaEl) areaEl.innerText = `Research Area: ${researchArea}`;
+}
+
+function looksLikeProject(data) {
+    if (!data || typeof data !== "object") return false;
+    return Boolean(
+        data.title ||
+        data.projectTitle ||
+        data.projectId ||
+        data.createdAt ||
+        data.status
+    );
+}
+
+function looksLikeStudent(data) {
+    if (!data || typeof data !== "object") return false;
+    return Boolean(
+        data.id ||
+        data.studentId ||
+        data.studentNumber ||
+        data.fullName ||
+        data.name
+    );
+}
+
+async function fetchStudentByCandidateIds(candidateIds) {
+    for (const id of candidateIds) {
+        if (!id) continue;
+        try {
+            const response = await fetch(`${STUDENT_API_BASE_URL}/${encodeURIComponent(id)}`);
+            if (!response.ok) continue;
+            const data = await response.json();
+            if (looksLikeStudent(data)) return data;
+        } catch (error) {
+            console.warn("Failed student fetch with id", id, error);
+        }
+    }
+    return null;
+}
+
+async function fetchProjectByCandidateIds(candidateIds) {
+    for (const studentId of candidateIds) {
+        if (!studentId) continue;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/student/${encodeURIComponent(studentId)}`);
+            if (!response.ok) continue;
+
+            const data = await response.json();
+            if (Array.isArray(data) && data.length > 0 && looksLikeProject(data[0])) return data[0];
+            if (looksLikeProject(data)) return data;
+        } catch (error) {
+            console.warn("Failed fetching with id", studentId, error);
+        }
     }
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/student/${studentId}`);
-        if (!response.ok) {
-            throw new Error("Failed to fetch project data");
-        }
+    return null;
+}
 
-        const project = await response.json();
+function getStatusClass(status) {
+    const normalized = String(status || "").toLowerCase();
+    if (normalized.includes("match")) return "matched";
+    if (normalized.includes("review")) return "review";
+    return "pending";
+}
 
-        if (project && project.length > 0) {
-            const projectData = project[0];
+function renderProject(project) {
+    const statusEl = document.getElementById("submissionStatus");
+    const metaEl = document.getElementById("submissionMeta");
+    const countEl = document.getElementById("proposalCount");
+    const tbody = document.getElementById("proposalTableBody");
+    const newProposalBtn = document.getElementById("newProposalBtn");
+    if (!statusEl || !metaEl || !countEl || !tbody || !newProposalBtn) return;
 
-            // Update Project Submission Status
-            document.querySelector(".stat-value").innerText = projectData.status;
-            document.querySelector(".stat-meta").innerText = `Submitted on ${new Date(projectData.createdAt).toLocaleDateString()}`;
+    if (project) {
+        const created = project.createdAt ? new Date(project.createdAt).toLocaleDateString() : "-";
+        const status = project.status || "Pending";
+        const area = project.researchArea || project.category || project.shortDescription || "Not Set";
 
-            // Update Recent Proposal Section
-            const proposalRow = `
-                <tr>
-                    <td>${projectData.title}</td>
-                    <td>${projectData.shortDescription}</td>
-                    <td>${new Date(projectData.createdAt).toLocaleDateString()}</td>
-                    <td><span class="status-pill review">${projectData.status}</span></td>
-                </tr>
-            `;
-            document.querySelector(".table tbody").innerHTML = proposalRow;
+        statusEl.innerText = status;
+        metaEl.innerText = `Submitted on ${created}`;
+        countEl.innerText = "1";
+        tbody.innerHTML = `
+            <tr>
+                <td>${project.title || project.projectTitle || "-"}</td>
+                <td>${area}</td>
+                <td>${created}</td>
+                <td><span class="status-pill ${getStatusClass(status)}">${status}</span></td>
+            </tr>
+        `;
 
-            // Disable "New Proposal" button
-            document.querySelector(".pill.primary").disabled = true;
-        } else {
-            // No project found
-            document.querySelector(".stat-value").innerText = "No Submission";
-            document.querySelector(".stat-meta").innerText = "No proposals submitted yet";
-            document.querySelector(".pill.primary").disabled = false;
+        // Keep button active so user can open submit page from dashboard.
+        newProposalBtn.classList.remove("disabled-link");
+        newProposalBtn.removeAttribute("aria-disabled");
+        newProposalBtn.removeAttribute("title");
+        newProposalBtn.style.pointerEvents = "auto";
+        newProposalBtn.style.opacity = "1";
+    } else {
+        statusEl.innerText = "No Submission";
+        metaEl.innerText = "No proposal submitted yet";
+        countEl.innerText = "0";
 
-            // Clear Recent Proposals
-            document.querySelector(".table tbody").innerHTML = "<tr><td colspan='4'>No proposals found</td></tr>";
-        }
-    } catch (error) {
-        console.error("Error initializing dashboard:", error);
+        tbody.innerHTML = "<tr><td colspan='4'>No proposal found</td></tr>";
+
+        newProposalBtn.classList.remove("disabled-link");
+        newProposalBtn.removeAttribute("aria-disabled");
+        newProposalBtn.removeAttribute("title");
+        newProposalBtn.style.pointerEvents = "auto";
+        newProposalBtn.style.opacity = "1";
     }
 }
 
-// Automatically initialize the dashboard
+async function initializeDashboard() {
+    const userId = readCookie("userId");
+    const studentNumber = readCookie("studentNumber");
+    const sessionStudentId = sessionStorage.getItem("studentId");
+
+    // Try candidate ids for student lookup first.
+    const candidateIds = [sessionStudentId, userId, studentNumber].filter(Boolean);
+
+    if (!candidateIds.some(Boolean)) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const student = await fetchStudentByCandidateIds(candidateIds);
+    setProfileInfo(student);
+
+    const projectCandidateIds = [
+        student?.id,
+        student?.studentId,
+        student?.studentNumber,
+        ...candidateIds
+    ].filter(Boolean);
+
+    const project = await fetchProjectByCandidateIds(projectCandidateIds);
+    renderProject(project);
+}
+
 initializeDashboard();

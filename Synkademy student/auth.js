@@ -39,7 +39,7 @@ window.logout = function () {
 
     // small delay to ensure cookies clear
     setTimeout(() => {
-        window.location.href = "index.html";
+        window.location.href = "login.html";
     }, 100);
 };
 
@@ -47,6 +47,6 @@ window.checkAuth = function () {
     const userId = getCookie("userId");
 
     if (!userId) {
-        window.location.href = "index.html";
+        window.location.href = "login.html";
     }
 };
