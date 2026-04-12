@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Portal Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="left-panel">
+      <h1 class="hero-title">Start Your <span>Research</span> Journey</h1>
+      <p class="hero-sub">Focus. Build. Achieve your academic goals.</p>
+
+      <div class="features">
+        <div class="card">Fast Access</div>
+        <div class="card">Blind Match</div>
+        <div class="card">Student Dashboard</div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="login-card">
+        <h2>Login</h2>
+
+        <div class="input-wrap">
+          <input type="text" id="email" placeholder="Student Email" required />
+        </div>
+
+        <div class="input-wrap password-wrap">
+          <input type="password" id="password" placeholder="Password" required />
+          <span class="toggle-pass" onclick="togglePassword()">Show</span>
+        </div>
+
+        <div class="form-options">
+          <a href="#" class="forgot-link">Forgot Password?</a>
+        </div>
+
+        <button type="button" onclick="login()">Login & Start Working</button>
+        <p id="msg" class="small-text error-text"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const pass = document.getElementById("password");
+      pass.type = pass.type === "password" ? "text" : "password";
+    }
+  </script>
+  <script src="auth.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>
