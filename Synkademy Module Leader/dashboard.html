@@ -1,71 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Module Leader Dashboard</title>
-
-<style>
-:root {
-  --green: #117F17;
-  --moss: #2BC333;
-  --bg: #f9fbf9;
-  --text: #1b1b1b;
-}
-
-body {
-  font-family: "Segoe UI", sans-serif;
-  background: var(--bg);
-  margin: 0;
-}
-
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synkademy | Module Leader</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-<div class="header">
-  <h3>Module Leader Dashboard</h3>
-  <button onclick="logout()">Logout</button>
-</div>
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-logo">S</div>
+                <span class="brand-name">Synkademy</span>
+            </div>
+            
+            <nav class="main-nav">
+                <a href="#" class="nav-item active">Dashboard</a>
+                <a href="#" class="nav-item">User Management</a>
+                <a href="#" class="nav-item">Research Areas</a>
+            </nav>
 
-<div class="container">
-  <div class="card">
-    <h2 id="name"></h2>
-    <p id="email"></p>
-    <p><strong>Role:</strong> Module Leader</p>
-  </div>
-</div>
+            <div class="user-menu">
+                <div class="user-details">
+                    <span id="name" class="user-name">Loading...</span>
+                    <span class="user-role">Module Leader</span>
+                </div>
+                <button class="btn-outline" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+    </header>
 
-<script>
-const SESSION_NAME = "synkademy_moduleleader_session";
+    <main class="workspace">
+        
+        <div class="page-header">
+            <div>
+                <h1>Dashboard</h1>
+                <p class="text-muted">Monitor and manage the blind-matching pipeline for the current academic year.</p>
+            </div>
+        </div>
 
-const user = getSession(SESSION_NAME);
+        <section class="kpi-container">
+            <div class="kpi-card card-total">
+                <div class="kpi-top">
+                    <div class="kpi-icon icon-total">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
+                    <span class="status-indicator total"></span>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Total Proposals</span>
+                    <div class="kpi-value" id="kpi-total">0</div>
+                </div>
+            </div>
+            
+            <div class="kpi-card card-success">
+                <div class="kpi-top">
+                    <div class="kpi-icon icon-success">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                    <span class="status-indicator success"></span>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Matched Projects</span>
+                    <div class="kpi-value text-success" id="kpi-matched">0</div>
+                </div>
+            </div> <div class="kpi-card card-warning">
+                <div class="kpi-top">
+                    <div class="kpi-icon icon-warning">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <span class="status-indicator warning"></span>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Pending Review</span>
+                    <div class="kpi-value text-warning" id="kpi-pending">0</div>
+                </div>
+            </div>
+        </section>
 
-if (!user) {
-  window.location.href = "index.html";
-}
+        <section class="data-panel">
+            <div class="panel-header">
+                <h2>Project Directory</h2>
+                
+                <div class="panel-controls">
+                    <input type="text" class="search-input" id="search-input" placeholder="Search projects or users...">
+                    
+                    <select class="filter-dropdown" id="filter-research">
+                        <option value="all">All Research Areas</option>
+                        </select>
 
-document.getElementById("name").innerText = user.fullName;
-document.getElementById("email").innerText = user.email;
+                    <select class="filter-dropdown" id="filter-status">
+                        <option value="all">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="matched">Matched</option>
+                    </select>
 
-function logout() {
-  document.cookie = SESSION_NAME + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  window.location.href = "index.html";
-}
+                    <select class="filter-dropdown" id="filter-supervisor">
+                        <option value="all">All Supervisors</option>
+                        </select>
+                </div>
+            </div>
+            
+            <div class="panel-tabs">
+                <button class="tab-btn active">All Proposals</button>
+                <button class="tab-btn">Matched Only</button>
+                <button class="tab-btn">Pending Only</button>
+            </div>
 
-function getSession(name) {
-  const cname = name + "=";
-  const cookies = decodeURIComponent(document.cookie).split(";");
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Project ID</th>
+                            <th>Title & Research Area</th>
+                            <th>Student</th>
+                            <th>Assigned Supervisor</th>
+                            <th>Match Status</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projectTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </section>
 
-  for (let c of cookies) {
-    c = c.trim();
-    if (c.indexOf(cname) === 0) {
-      return JSON.parse(c.substring(cname.length));
+    </main>
+
+    <script>
+    let allProjects = [];
+
+    const SESSION_NAME = "synkademy_moduleleader_session";
+    const user = getSession(SESSION_NAME);
+
+    if (!user) {
+        window.location.href = "index.html"; 
+    } else {
+        document.getElementById("name").innerText = user.fullName || "Module Leader";
     }
-  }
-  return null;
-}
+
+    function logout() {
+        document.cookie = SESSION_NAME + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = "index.html"; 
+    }
+
+    function getSession(name) {
+        const cname = name + "=";
+        const cookies = decodeURIComponent(document.cookie).split(";");
+        for (let c of cookies) {
+            c = c.trim();
+            if (c.indexOf(cname) === 0) {
+                return JSON.parse(c.substring(cname.length));
+            }
+        }
+        return null;
+    }
+
+    async function loadDashboardData() {
+        try {
+            const response = await fetch("http://localhost:5037/api/ModuleLeader/dashboard");
+            
+            if (!response.ok) {
+                throw new Error("Failed to fetch data from the server.");
+            }
+
+            const data = await response.json(); 
+            allProjects = data.projects;
+
+            document.getElementById("kpi-total").innerText = data.totalProposals;
+            document.getElementById("kpi-matched").innerText = data.matchedProjects;
+            document.getElementById("kpi-pending").innerText = data.pendingReview;
+
+            const researchSelect = document.getElementById("filter-research");
+            data.availableResearchAreas.forEach(area => {
+                const opt = document.createElement("option");
+                opt.value = area.toLowerCase();
+                opt.innerText = area;
+                researchSelect.appendChild(opt);
+            });
+
+            const supervisorSelect = document.getElementById("filter-supervisor");
+            data.availableSupervisors.forEach(sup => {
+                const opt = document.createElement("option");
+                opt.value = sup.name.toLowerCase();
+                opt.innerText = sup.name;
+                supervisorSelect.appendChild(opt);
+            });
+
+            renderTable(allProjects);
+
+        } catch (error) {
+            console.error("Error loading dashboard:", error);
+        }
+    }
+
+    function renderTable(projectsToRender) {
+        const tbody = document.getElementById("projectTableBody");
+        tbody.innerHTML = ""; 
+
+        if (projectsToRender.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 2rem;">No projects match your filters.</td></tr>`;
+            return;
+        }
+
+        projectsToRender.forEach(p => {
+            const isMatched = p.status.toLowerCase() === "matched";
+            const badgeClass = isMatched ? "badge-success" : "badge-warning";
+            
+            let actionsHtml = "";
+            if (isMatched) {
+                actionsHtml = `
+                    <button class="btn-outline-primary btn-sm">Reassign</button>
+                    <button class="btn-text text-danger">Break Match</button>
+                `;
+            } else {
+                actionsHtml = `
+                    <button class="btn-text">Review</button>
+                    <button class="btn-outline-primary btn-sm">Assign</button>
+                `;
+            }
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td class="text-muted">#PRJ-${p.projectId}</td>
+                <td>
+                    <div class="fw-bold">${p.title}</div>
+                    <div class="text-small text-muted">${p.researchAreas.join(", ")}</div>
+                </td>
+                <td class="text-muted">${p.studentName}</td>
+                <td class="text-muted">${p.supervisorName}</td>
+                <td><span class="badge ${badgeClass}">${p.status}</span></td>
+                <td class="text-right">
+                    <div class="action-group">
+                        ${actionsHtml}
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function applyFilters() {
+        const searchTerm = document.getElementById("search-input").value.toLowerCase();
+        const researchFilter = document.getElementById("filter-research").value.toLowerCase();
+        const statusFilter = document.getElementById("filter-status").value.toLowerCase();
+        const supervisorFilter = document.getElementById("filter-supervisor").value.toLowerCase();
+
+        const activeTab = document.querySelector(".tab-btn.active").innerText.toLowerCase();
+
+        const filtered = allProjects.filter(p => {
+            if (activeTab.includes("matched") && p.status.toLowerCase() !== "matched") return false;
+            if (activeTab.includes("pending") && p.status.toLowerCase() !== "pending") return false;
+
+            const matchesSearch = p.title.toLowerCase().includes(searchTerm) || p.studentName.toLowerCase().includes(searchTerm);
+            if (!matchesSearch) return false;
+
+            if (researchFilter !== "all" && !p.researchAreas.some(ra => ra.toLowerCase() === researchFilter)) return false;
+            if (statusFilter !== "all" && p.status.toLowerCase() !== statusFilter) return false;
+            if (supervisorFilter !== "all" && p.supervisorName.toLowerCase() !== supervisorFilter) return false;
+
+            return true;
+        });
+
+        renderTable(filtered);
+    }
+
+    function setupEventListeners() {
+        const tabs = document.querySelectorAll(".tab-btn");
+        tabs.forEach(tab => {
+            tab.addEventListener("click", (e) => {
+                tabs.forEach(t => t.classList.remove("active"));
+                e.target.classList.add("active");
+                applyFilters();
+            });
+        });
+
+        document.getElementById("search-input").addEventListener("input", applyFilters);
+
+        document.getElementById("filter-research").addEventListener("change", applyFilters);
+        document.getElementById("filter-status").addEventListener("change", applyFilters);
+        document.getElementById("filter-supervisor").addEventListener("change", applyFilters);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadDashboardData();
+        setupEventListeners(); 
+    });
 </script>
 
 </body>
