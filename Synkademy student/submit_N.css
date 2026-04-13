@@ -1,4 +1,3 @@
-
 :root {
   --gold:   #FBC02D;
   --green:  #157F1F;
@@ -9,7 +8,6 @@
   --black:  #1B1B1B;
   --white:  #ffffff;
 }
-
 
 * {
   margin: 0;
@@ -23,7 +21,7 @@ body {
   color: var(--black);
 }
 
-
+/* ── NAV ── */
 .nav {
   background: var(--navy);
   display: flex;
@@ -75,14 +73,14 @@ body {
   font-weight: 700;
 }
 
-
+/* ── CONTAINER ── */
 .container {
   padding: 36px 32px;
   max-width: 1100px;
   margin: 0 auto;
 }
 
-
+/* ── HERO ── */
 .hero {
   background: var(--navy);
   border-radius: 16px;
@@ -175,14 +173,14 @@ body {
   font-weight: 700;
 }
 
-
+/* ── GRID ── */
 .grid {
   display: grid;
   grid-template-columns: 1fr 380px;
   gap: 20px;
 }
 
-
+/* ── CARDS ── */
 .card {
   background: var(--white);
   border-radius: 14px;
@@ -227,7 +225,7 @@ body {
   color: var(--black);
 }
 
-
+/* ── FORM FIELDS ── */
 .field-group {
   display: flex;
   flex-direction: column;
@@ -279,13 +277,6 @@ textarea {
   min-height: 90px;
 }
 
-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23555' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  cursor: pointer;
-}
-
 .char-count {
   font-size: 11px;
   color: #bbb;
@@ -298,7 +289,7 @@ select {
   margin-top: 12px;
 }
 
-
+/* ── TECH TAGS ── */
 .tags-row {
   display: flex;
   flex-wrap: wrap;
@@ -316,12 +307,21 @@ select {
   user-select: none;
 }
 
-.stack-tag.py     { background: rgba(21, 127, 31, 0.10); color: var(--green);  border-color: rgba(21, 127, 31, 0.2); }
-.stack-tag.api    { background: rgba(71, 71, 157, 0.10); color: var(--violet); border-color: rgba(71, 71, 157, 0.2); }
-.stack-tag.react  { background: rgba(76, 185, 99, 0.12); color: #1e7a35;      border-color: rgba(76, 185, 99, 0.25); }
-.stack-tag.gpt    { background: rgba(251, 192, 45, 0.18); color: #8a6400;     border-color: rgba(251, 192, 45, 0.3); }
-.stack-tag.docker { background: rgba(24, 95, 165, 0.10); color: #185FA5;      border-color: rgba(24, 95, 165, 0.2); }
-.stack-tag.ts     { background: rgba(71, 71, 157, 0.08); color: #47479D;      border-color: rgba(71, 71, 157, 0.18); }
+.stack-tag.py     { background: rgba(21, 127, 31, 0.10);  color: var(--green);  border-color: rgba(21, 127, 31, 0.2);  }
+.stack-tag.api    { background: rgba(71, 71, 157, 0.10);  color: var(--violet); border-color: rgba(71, 71, 157, 0.2);  }
+.stack-tag.react  { background: rgba(76, 185, 99, 0.12);  color: #1e7a35;      border-color: rgba(76, 185, 99, 0.25); }
+.stack-tag.gpt    { background: rgba(251, 192, 45, 0.18); color: #8a6400;      border-color: rgba(251, 192, 45, 0.3); }
+.stack-tag.docker { background: rgba(24, 95, 165, 0.10);  color: #185FA5;      border-color: rgba(24, 95, 165, 0.2);  }
+.stack-tag.ts     { background: rgba(71, 71, 157, 0.08);  color: #47479D;      border-color: rgba(71, 71, 157, 0.18); }
+
+.stack-tag.custom {
+  background: rgba(71, 71, 157, 0.08);
+  color: var(--violet);
+  border-color: rgba(71, 71, 157, 0.22);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
 
 .stack-tag.selected {
   transform: scale(1.04);
@@ -332,7 +332,68 @@ select {
   opacity: 0.8;
 }
 
+.remove-tag {
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+  line-height: 1;
+}
 
+.remove-tag:hover {
+  opacity: 1;
+}
+
+/* ── CUSTOM TECH INPUT ROW ── */
+.custom-tech-group {
+  margin-top: 18px;
+  margin-bottom: 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.tech-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.tech-input-row input[type="text"] {
+  flex: 1;
+}
+
+.add-tech-btn {
+  padding: 10px 18px;
+  border-radius: 9px;
+  border: 1.5px solid var(--mint);
+  background: rgba(76, 185, 99, 0.10);
+  color: #1e7a35;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.add-tech-btn:hover {
+  background: var(--mint);
+  color: var(--white);
+}
+
+.add-tech-btn:active {
+  transform: scale(0.97);
+}
+
+.custom-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  min-height: 0;
+}
+
+/* ── STATUS / GUIDELINES CARD ── */
 .status-card {
   background: var(--navy);
   border-radius: 14px;
@@ -377,7 +438,7 @@ select {
 .g-dot.mint   { background: var(--mint); }
 .g-dot.violet { background: #a89be0; }
 
-
+/* ── SUBMIT BUTTON ── */
 .submit-btn {
   width: 100%;
   padding: 14px;
@@ -397,27 +458,7 @@ select {
 .submit-btn:hover  { background: #3aab54; }
 .submit-btn:active { transform: scale(0.98); }
 
-.save-btn {
-  width: 100%;
-  padding: 11px;
-  border-radius: 11px;
-  margin-top: 10px;
-  background: transparent;
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
-  font-weight: 600;
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.save-btn:hover {
-  background: rgba(255, 255, 255, 0.07);
-  color: var(--white);
-}
-
-
+/* ── TOAST ── */
 .success-toast {
   display: none;
   border-radius: 9px;
@@ -440,13 +481,7 @@ select {
   color: #c62828;
 }
 
-.success-toast.draft {
-  background: rgba(251, 192, 45, 0.12);
-  border: 1px solid rgba(251, 192, 45, 0.3);
-  color: #8a6400;
-}
-
-
+/* ── RESEARCH AREA CARD ── */
 .cat-card {
   background: linear-gradient(135deg, var(--violet), var(--navy));
   border-radius: 14px;
@@ -498,43 +533,7 @@ select {
   font-size: 14px;
 }
 
-
-.info-rows {
-  display: flex;
-  flex-direction: column;
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 11px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.info-row:last-child {
-  border-bottom: none;
-}
-
-.info-label {
-  font-size: 13px;
-  color: #888;
-  font-weight: 500;
-}
-
-.info-val {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--black);
-}
-
-.info-val.violet      { color: var(--violet); }
-.info-val.navy        { color: var(--navy); }
-.info-val.mint        { color: var(--mint); }
-.info-val.amber       { color: #c07b00; }
-.info-val.placeholder { color: #bbb; font-style: italic; font-weight: 500; }
-
-
+/* ── RESPONSIVE ── */
 @media (max-width: 750px) {
   .grid {
     grid-template-columns: 1fr;

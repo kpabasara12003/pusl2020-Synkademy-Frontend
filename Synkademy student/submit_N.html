@@ -4,17 +4,494 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submit New Project</title>
-  <link rel="stylesheet" href="submit_N.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+    :root {
+      --gold:   #FBC02D;
+      --green:  #157F1F;
+      --mint:   #4CB963;
+      --bg:     #F9FBF9;
+      --violet: #47479D;
+      --navy:   #313B58;
+      --black:  #1B1B1B;
+      --white:  #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--black);
+    }
+
+    /* ── NAV ── */
+    .nav {
+      background: var(--navy);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 32px;
+      border-bottom: 3px solid var(--gold);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 1px;
+      padding: 6px 14px;
+      border-radius: 8px;
+    }
+
+    .nav-links { display: flex; gap: 6px; }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.08); }
+    .nav-links a.active { color: var(--black); background: var(--mint); font-weight: 700; }
+
+    /* ── CONTAINER ── */
+    .container { padding: 36px 32px; max-width: 1100px; margin: 0 auto; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy);
+      border-radius: 16px;
+      padding: 36px 40px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 6px solid var(--mint);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      right: -40px; top: -40px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(76,185,99,0.15);
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: 60px; bottom: -60px;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      background: rgba(71,71,157,0.15);
+    }
+
+    .hero-text { position: relative; z-index: 1; }
+
+    .hero-badge {
+      background: var(--mint);
+      color: var(--black);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      color: var(--white);
+      font-family: 'Syne', sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .hero p { color: rgba(255,255,255,0.55); font-size: 15px; }
+
+    .hero-icon {
+      position: relative; z-index: 1;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 18px 26px;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .hero-icon span {
+      display: block;
+      color: rgba(255,255,255,0.45);
+      font-size: 11px; letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .hero-icon strong { color: var(--mint); font-size: 28px; font-weight: 700; }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid rgba(0,0,0,0.07);
+      margin-bottom: 20px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:last-child { margin-bottom: 0; }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.09);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .card-icon { width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0; }
+    .card-icon.gold   { background: rgba(251,192,45,0.15); }
+    .card-icon.mint   { background: rgba(76,185,99,0.12); }
+    .card-icon.violet { background: rgba(71,71,157,0.10); }
+    .card h3 { font-size: 15px; font-weight: 600; color: var(--black); }
+
+    /* ── FORM FIELDS ── */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .field-group.last { margin-bottom: 0; }
+
+    .field-label { font-size: 13px; font-weight: 600; color: #555; }
+    .field-label span { color: #e53935; margin-left: 2px; }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid rgba(0,0,0,0.12);
+      border-radius: 9px;
+      font-size: 14px;
+      color: var(--black);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: var(--mint);
+      box-shadow: 0 0 0 3px rgba(76,185,99,0.12);
+    }
+
+    textarea { resize: vertical; line-height: 1.6; min-height: 90px; }
+
+    .char-count { font-size: 11px; color: #bbb; text-align: right; }
+    .hint { font-size: 12px; color: #aaa; margin-top: 12px; }
+
+    /* ── TECH TAGS ── */
+    .tags-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .stack-tag {
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: all 0.2s;
+      user-select: none;
+      background: rgba(0,0,0,0.06);
+      color: #555;
+      border-color: rgba(0,0,0,0.1);
+    }
+
+    .stack-tag.selected {
+      transform: scale(1.04);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      background: var(--navy);
+      color: var(--white);
+      border-color: var(--navy);
+    }
+
+    .stack-tag:hover { opacity: 0.8; }
+
+    .stack-tag.custom {
+      background: rgba(71,71,157,0.08);
+      color: var(--violet);
+      border-color: rgba(71,71,157,0.22);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stack-tag.custom.selected {
+      background: var(--violet);
+      color: var(--white);
+      border-color: var(--violet);
+    }
+
+    .remove-tag {
+      font-size: 11px; font-weight: 700;
+      cursor: pointer; opacity: 0.6;
+      transition: opacity 0.15s; line-height: 1;
+    }
+
+    .remove-tag:hover { opacity: 1; }
+
+    /* ── CUSTOM TECH ── */
+    .custom-tech-group {
+      margin-top: 18px;
+      margin-bottom: 0;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .tech-input-row { display: flex; gap: 8px; }
+    .tech-input-row input[type="text"] { flex: 1; }
+
+    .add-tech-btn {
+      padding: 10px 18px;
+      border-radius: 9px;
+      border: 1.5px solid var(--mint);
+      background: rgba(76,185,99,0.10);
+      color: #1e7a35;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .add-tech-btn:hover { background: var(--mint); color: var(--white); }
+    .add-tech-btn:active { transform: scale(0.97); }
+
+    .custom-tags-row {
+      display: flex; flex-wrap: wrap;
+      gap: 8px; margin-top: 10px; min-height: 0;
+    }
+
+    /* ── STATUS / GUIDELINES CARD ── */
+    .status-card {
+      background: var(--navy);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .status-card h3 {
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .guideline-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .guideline-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.5;
+    }
+
+    .g-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%; flex-shrink: 0; margin-top: 4px;
+    }
+
+    .g-dot.gold   { background: var(--gold); }
+    .g-dot.mint   { background: var(--mint); }
+    .g-dot.violet { background: #a89be0; }
+
+    /* ── SUBMIT BUTTON ── */
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 11px;
+      border: none;
+      background: var(--mint);
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      letter-spacing: 0.3px;
+      margin-top: 20px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .submit-btn:hover  { background: #3aab54; }
+    .submit-btn:active { transform: scale(0.98); }
+
+    /* ── TOAST ── */
+    .success-toast {
+      display: none;
+      border-radius: 9px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .success-toast.success {
+      background: rgba(76,185,99,0.12);
+      border: 1px solid rgba(76,185,99,0.3);
+      color: #1e7a35;
+    }
+
+    .success-toast.error {
+      background: rgba(229,57,53,0.10);
+      border: 1px solid rgba(229,57,53,0.25);
+      color: #c62828;
+    }
+
+    /* ── RESEARCH AREA CARD ── */
+    .cat-card {
+      background: linear-gradient(135deg, var(--violet), var(--navy));
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .cat-label {
+      color: rgba(255,255,255,0.55);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .cat-chips { display: flex; flex-direction: column; gap: 8px; }
+
+    .cat-chip {
+      padding: 10px 16px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.05);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      transition: all 0.2s;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cat-chip.active {
+      background: rgba(76,185,99,0.20);
+      border-color: rgba(76,185,99,0.40);
+      color: var(--mint);
+    }
+
+    .cat-chip:hover:not(.active) {
+      background: rgba(255,255,255,0.10);
+      color: var(--white);
+    }
+
+    /* ── TAGS CARD (API Tags) ── */
+    .tags-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid rgba(0,0,0,0.07);
+      margin-bottom: 20px;
+    }
+
+    .tags-card h3 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 14px;
+    }
+
+    /* ── LOADING STATE ── */
+    .loading-chips {
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+
+    .skeleton-chip {
+      height: 32px; width: 90px;
+      border-radius: 30px;
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 750px) {
+      .grid { grid-template-columns: 1fr; }
+      .hero { flex-direction: column; gap: 20px; align-items: flex-start; }
+      .container { padding: 20px 16px; }
+      .nav { padding: 12px 16px; }
+    }
+  </style>
 </head>
+
 <body>
 
 <div class="page">
   <nav class="nav">
-    <div class="logo"></div>
+    <div class="logo">ResearchHub</div>
     <div class="nav-links">
       <a href="dashboard.html">Dashboard</a>
       <a href="project_d.html">Projects</a>
-      <a href="project_d.html" class="active">Submit</a>
+      <a href="#" class="active">Submit</a>
     </div>
   </nav>
 
@@ -35,10 +512,10 @@
 
     <div class="grid">
 
-  
+      <!-- LEFT COLUMN -->
       <div class="left">
 
-        
+        <!-- Project Information -->
         <div class="card">
           <div class="card-header">
             <div class="card-icon gold"></div>
@@ -47,78 +524,24 @@
 
           <div class="field-group">
             <label class="field-label">Project Title <span>*</span></label>
-            <input type="text" id="proj-title" placeholder="e.g. AI Chatbot System" maxlength="80" oninput="updatePreview()">
+            <input type="text" id="title" placeholder="e.g. AI Chatbot System" maxlength="80" oninput="updateCount('title','title-count')">
             <div class="char-count"><span id="title-count">0</span>/80</div>
           </div>
 
           <div class="field-group">
+            <label class="field-label">Short Description <span>*</span></label>
+            <input type="text" id="shortDesc" placeholder="e.g. A smart assistant for student queries" maxlength="120" oninput="updateCount('shortDesc','short-desc-count')">
+            <div class="char-count"><span id="short-desc-count">0</span>/120</div>
+          </div>
+
+          <div class="field-group last">
             <label class="field-label">Abstract <span>*</span></label>
-            <textarea id="proj-abstract" placeholder="Briefly describe your project, its goals, and expected outcomes..." maxlength="400" rows="4" oninput="updateAbstractCount()"></textarea>
+            <textarea id="abstract" placeholder="Briefly describe your project, its goals, and expected outcomes..." maxlength="400" rows="4" oninput="updateCount('abstract','abstract-count')"></textarea>
             <div class="char-count"><span id="abstract-count">0</span>/400</div>
           </div>
-
-          <div class="field-group">
-            <label class="field-label">Project Year <span>*</span></label>
-            <select id="proj-year" onchange="updatePreview()">
-              <option value="">Select year...</option>
-              <option value="2025" selected>2025</option>
-              <option value="2026">2026</option>
-              <option value="2027">2027</option>
-            </select>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Duration</label>
-            <select id="proj-duration" onchange="updatePreview()">
-              <option value="6 Months">6 Months</option>
-              <option value="12 Months" selected>12 Months</option>
-              <option value="18 Months">18 Months</option>
-              <option value="24 Months">24 Months</option>
-            </select>
-          </div>
-        </div>
-
-       
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon mint"></div>
-            <h3>Technology Stack</h3>
-          </div>
-          <div class="tags-row" id="tags-row">
-            <span class="stack-tag py selected" onclick="toggleTag(this)">Python</span>
-            <span class="stack-tag api" onclick="toggleTag(this)">FastAPI</span>
-            <span class="stack-tag react" onclick="toggleTag(this)">React</span>
-            <span class="stack-tag gpt" onclick="toggleTag(this)">GPT</span>
-            <span class="stack-tag docker" onclick="toggleTag(this)">Docker</span>
-            <span class="stack-tag ts" onclick="toggleTag(this)">TypeScript</span>
-          </div>
-          <p class="hint">Click to select the technologies used in your project.</p>
         </div>
 
       
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon violet"></div>
-            <h3>Supervisor &amp; Team</h3>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Supervisor Name <span>*</span></label>
-            <input type="text" id="supervisor" placeholder="e.g. Dr. A. Rahman" oninput="updatePreview()">
-          </div>
-          <div class="field-group">
-            <label class="field-label">Department</label>
-            <input type="text" id="department" placeholder="e.g. Faculty of Computing">
-          </div>
-          <div class="field-group last">
-            <label class="field-label">Number of Members</label>
-            <select id="members" onchange="updatePreview()">
-              <option value="1">1 Member</option>
-              <option value="2">2 Members</option>
-              <option value="3" selected>3 Members</option>
-              <option value="4">4 Members</option>
-              <option value="5">5 Members</option>
-            </select>
-          </div>
         </div>
 
       </div><!-- /LEFT -->
@@ -126,7 +549,7 @@
       <!-- RIGHT COLUMN -->
       <div class="right">
 
-        <!-- GUIDELINES + SUBMIT CARD -->
+        <!-- Guidelines + Submit -->
         <div class="status-card">
           <h3>Submission Guidelines</h3>
           <ul class="guideline-list">
@@ -136,58 +559,29 @@
             <li><span class="g-dot gold"></span>Status will be set to Pending Review automatically.</li>
             <li><span class="g-dot mint"></span>A unique Project ID will be assigned on submission.</li>
           </ul>
-          <button class="submit-btn" onclick="handleSubmit()">Submit Project</button>
-          <button class="save-btn" onclick="handleSave()">Save as Draft</button>
+          <button class="submit-btn" onclick="submitProject()">Submit Project</button>
           <div class="success-toast" id="toast"></div>
         </div>
 
-        <!-- RESEARCH AREA CARD -->
+        <!-- Research Areas (loaded from API) -->
         <div class="cat-card">
           <p class="cat-label">Research Area</p>
-          <div class="cat-chips">
-            <button class="cat-chip active" onclick="selectCat(this)"><span class="chip-icon"></span>AI / Machine Learning</button>
-            <button class="cat-chip" onclick="selectCat(this)"><span class="chip-icon"></span>Web Development</button>
-            <button class="cat-chip" onclick="selectCat(this)"><span class="chip-icon"></span>Cybersecurity</button>
-            <button class="cat-chip" onclick="selectCat(this)"><span class="chip-icon"></span>Data Science</button>
-            <button class="cat-chip" onclick="selectCat(this)"><span class="chip-icon"></span>Mobile Development</button>
+          <div class="cat-chips" id="researchAreas">
+            <!-- skeleton loaders -->
+            <div class="skeleton-chip" style="width:160px;height:38px;border-radius:9px;"></div>
+            <div class="skeleton-chip" style="width:130px;height:38px;border-radius:9px;margin-top:4px;"></div>
+            <div class="skeleton-chip" style="width:150px;height:38px;border-radius:9px;margin-top:4px;"></div>
           </div>
         </div>
 
-        <!-- PREVIEW CARD -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-icon gold"></div>
-            <h3>Submission Preview</h3>
-          </div>
-          <div class="info-rows">
-            <div class="info-row">
-              <span class="info-label">Project ID</span>
-              <span class="info-val violet">Auto-assigned</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Title</span>
-              <span class="info-val placeholder" id="prev-title">Not entered</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Year</span>
-              <span class="info-val navy" id="prev-year">2025</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Duration</span>
-              <span class="info-val" id="prev-duration">12 Months</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Supervisor</span>
-              <span class="info-val placeholder" id="prev-supervisor">Not entered</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Members</span>
-              <span class="info-val mint" id="prev-members">3</span>
-            </div>
-            <div class="info-row">
-              <span class="info-label">Status</span>
-              <span class="info-val amber">Pending Review</span>
-            </div>
+        <!-- Tags (loaded from API) -->
+        <div class="tags-card">
+          <h3>Tags</h3>
+          <div class="tags-row" id="tags">
+            <div class="skeleton-chip"></div>
+            <div class="skeleton-chip"></div>
+            <div class="skeleton-chip"></div>
+            <div class="skeleton-chip"></div>
           </div>
         </div>
 
@@ -197,77 +591,223 @@
 </div><!-- /PAGE -->
 
 <script>
-  function toggleTag(el) {
-    el.classList.toggle('selected');
+/* ── CONFIG ── */
+const BASE_URL = "http://localhost:5037/api";
+
+let selectedResearchAreas = [];
+let selectedTags = [];
+
+/* ── INIT ── */
+window.onload = async () => {
+  checkAuth();
+  await loadResearchAreas();
+  await loadTags();
+};
+
+/* ── AUTH HELPER (from auth.js) ── */
+function checkAuth() {
+  // auth.js handles this — kept as hook
+  if (typeof window.checkAuthExternal === "function") window.checkAuthExternal();
+}
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+/* ── LOAD RESEARCH AREAS ── */
+async function loadResearchAreas() {
+  try {
+    const res = await fetch(`${BASE_URL}/ResearchAreas`);
+    const data = await res.json();
+
+    const container = document.getElementById("researchAreas");
+    container.innerHTML = ""; // clear skeletons
+
+    data.forEach(item => {
+      const btn = document.createElement("button");
+      btn.className = "cat-chip";
+      btn.innerHTML = `<span class="chip-icon">◈</span>${item.name}`;
+
+      btn.onclick = () => {
+        btn.classList.toggle("active");
+        if (selectedResearchAreas.includes(item.id)) {
+          selectedResearchAreas = selectedResearchAreas.filter(i => i !== item.id);
+        } else {
+          selectedResearchAreas.push(item.id);
+        }
+      };
+
+      container.appendChild(btn);
+    });
+  } catch (err) {
+    console.error("Error loading research areas:", err);
+    document.getElementById("researchAreas").innerHTML =
+      `<p style="color:rgba(255,255,255,0.4);font-size:13px;">Could not load research areas</p>`;
+  }
+}
+
+/* ── LOAD TAGS ── */
+async function loadTags() {
+  try {
+    const res = await fetch(`${BASE_URL}/Tags`);
+    const data = await res.json();
+
+    const container = document.getElementById("tags");
+    container.innerHTML = ""; // clear skeletons
+
+    data.forEach(item => {
+      const el = document.createElement("span");
+      el.className = "stack-tag";
+      el.textContent = item.name;
+
+      el.onclick = () => {
+        el.classList.toggle("selected");
+        if (selectedTags.includes(item.id)) {
+          selectedTags = selectedTags.filter(i => i !== item.id);
+        } else {
+          selectedTags.push(item.id);
+        }
+      };
+
+      container.appendChild(el);
+    });
+  } catch (err) {
+    console.error("Error loading tags:", err);
+    document.getElementById("tags").innerHTML =
+      `<p style="color:#aaa;font-size:13px;">Could not load tags</p>`;
+  }
+}
+
+/* ── PRESET TECH TAGS ── */
+function togglePresetTag(el) {
+  el.classList.toggle("selected");
+}
+
+/* ── COLLECT TECH STACK STRING ── */
+function getTechStack() {
+  const techs = [];
+  document.querySelectorAll("#preset-tags-row .stack-tag.selected, #custom-tags-row .stack-tag.selected").forEach(tag => {
+    const text = tag.innerText.replace("✕", "").trim();
+    if (text) techs.push(text);
+  });
+  return techs.join(", ");
+}
+
+/* ── CHAR COUNTERS ── */
+function updateCount(inputId, countId) {
+  document.getElementById(countId).textContent =
+    document.getElementById(inputId).value.length;
+}
+
+/* ── ADD CUSTOM TECH ── */
+function addCustomTech() {
+  const input = document.getElementById("custom-tech");
+  const val = input.value.trim();
+  if (!val) return;
+
+  const container = document.getElementById("custom-tags-row");
+  const tag = document.createElement("span");
+  tag.className = "stack-tag custom selected";
+  tag.innerHTML = `${val} <span class="remove-tag" onclick="this.parentElement.remove()">✕</span>`;
+  container.appendChild(tag);
+  input.value = "";
+}
+
+document.getElementById("custom-tech").addEventListener("keydown", e => {
+  if (e.key === "Enter") addCustomTech();
+});
+
+/* ── SUBMIT ── */
+async function submitProject() {
+  const studentId = getCookie("userId");
+
+  const title     = document.getElementById("title").value.trim();
+  const shortDesc = document.getElementById("shortDesc").value.trim();
+  const abstract  = document.getElementById("abstract").value.trim();
+  const techStack = getTechStack();
+
+  if (!studentId) {
+    showToast("Session expired. Please login again.", "error");
+    return;
   }
 
-  function selectCat(el) {
-    document.querySelectorAll('.cat-chip').forEach(function(c) { c.classList.remove('active'); });
-    el.classList.add('active');
+  if (!title || !shortDesc || !abstract) {
+    showToast("Please fill all required fields.", "error");
+    return;
   }
 
-  function updatePreview() {
-    var title = document.getElementById('proj-title').value;
-    var prevTitle = document.getElementById('prev-title');
-    if (title.trim()) {
-      prevTitle.textContent = title.length > 22 ? title.substring(0, 22) + '…' : title;
-      prevTitle.classList.remove('placeholder');
+  if (selectedResearchAreas.length === 0) {
+    showToast("Select at least one research area.", "error");
+    return;
+  }
+
+  if (selectedTags.length === 0) {
+    showToast("Select at least one tag.", "error");
+    return;
+  }
+
+  const payload = {
+    studentId: parseInt(studentId),
+    title,
+    shortDescription: shortDesc,
+    abstract,
+    techStack,
+    proposalFilePath: "",
+    researchAreas: selectedResearchAreas,
+    tags: selectedTags
+  };
+
+  try {
+    const res = await fetch(`${BASE_URL}/Projects/create`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      showToast("Project submitted successfully 🚀", "success");
+      resetForm();
     } else {
-      prevTitle.textContent = 'Not entered';
-      prevTitle.classList.add('placeholder');
+      const text = await res.text();
+      showToast("Error: " + text, "error");
     }
-
-    var year = document.getElementById('proj-year').value;
-    document.getElementById('prev-year').textContent = year || '—';
-    document.getElementById('prev-duration').textContent = document.getElementById('proj-duration').value;
-
-    var sup = document.getElementById('supervisor').value;
-    var prevSup = document.getElementById('prev-supervisor');
-    if (sup.trim()) {
-      prevSup.textContent = sup;
-      prevSup.classList.remove('placeholder');
-    } else {
-      prevSup.textContent = 'Not entered';
-      prevSup.classList.add('placeholder');
-    }
-
-    document.getElementById('prev-members').textContent = document.getElementById('members').value;
+  } catch (err) {
+    console.error(err);
+    showToast("Server error. Please try again.", "error");
   }
+}
 
-  function updateAbstractCount() {
-    document.getElementById('abstract-count').textContent = document.getElementById('proj-abstract').value.length;
-  }
+/* ── TOAST ── */
+function showToast(msg, type) {
+  const toast = document.getElementById("toast");
+  toast.className = `success-toast ${type}`;
+  toast.textContent = msg;
+  toast.style.display = "block";
+  setTimeout(() => { toast.style.display = "none"; }, 3500);
+}
 
-  document.getElementById('proj-title').addEventListener('input', function() {
-    document.getElementById('title-count').textContent = this.value.length;
-    updatePreview();
+/* ── RESET ── */
+function resetForm() {
+  document.getElementById("title").value = "";
+  document.getElementById("shortDesc").value = "";
+  document.getElementById("abstract").value = "";
+
+  ["title-count","short-desc-count","abstract-count"].forEach(id => {
+    document.getElementById(id).textContent = "0";
   });
 
-  function handleSubmit() {
-    var title      = document.getElementById('proj-title').value.trim();
-    var abstract   = document.getElementById('proj-abstract').value.trim();
-    var supervisor = document.getElementById('supervisor').value.trim();
-    var toast      = document.getElementById('toast');
+  document.querySelectorAll(".stack-tag.selected").forEach(el => el.classList.remove("selected"));
+  document.querySelectorAll(".cat-chip.active").forEach(el => el.classList.remove("active"));
+  document.getElementById("custom-tags-row").innerHTML = "";
 
-    if (!title || !abstract || !supervisor) {
-      toast.className = 'success-toast error';
-      toast.textContent = 'Please fill in all required fields (*)';
-      toast.style.display = 'block';
-      return;
-    }
-
-    toast.className = 'success-toast success';
-    toast.textContent = 'Project submitted successfully!';
-    toast.style.display = 'block';
-  }
-
-  function handleSave() {
-    var toast = document.getElementById('toast');
-    toast.className = 'success-toast draft';
-    toast.textContent = 'Draft saved successfully.';
-    toast.style.display = 'block';
-  }
+  selectedResearchAreas = [];
+  selectedTags = [];
+}
 </script>
+
+<!-- If auth.js is available externally, uncomment the line below -->
+<!-- <script src="auth.js"></script> -->
 
 </body>
 </html>
