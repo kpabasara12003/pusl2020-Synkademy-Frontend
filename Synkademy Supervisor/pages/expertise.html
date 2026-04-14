@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expertise - Synkademy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .expertise-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--sv-text-carbon);
+    }
+
+    .section-subtitle {
+      color: var(--sv-gray-600);
+      margin-bottom: 24px;
+    }
+
+    .expertise-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .available-box, .selected-box {
+      background: var(--sv-white);
+      border-radius: var(--sv-radius);
+      box-shadow: var(--sv-shadow-sm);
+      padding: 24px;
+      height: fit-content;
+    }
+
+    .available-box h3, .selected-box h3 {
+      margin-bottom: 16px;
+      font-size: 1.1rem;
+      color: #313b58;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--sv-gray-200);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+
+    .research-list {
+      max-height: 460px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .research-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      margin-bottom: 6px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .research-item:hover {
+      background: #fbc02d;
+    }
+
+    .research-item input[type="checkbox"] {
+      margin-right: 12px;
+      accent-color: #4cb963;
+      transform: scale(1.1);
+    }
+
+    .research-item label {
+      flex: 1;
+      cursor: pointer;
+      font-size: 0.98rem;
+    }
+
+    .selected-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      min-height: 80px;
+    }
+
+    .chip {
+      background: #47479d;
+      color: var(--sv-white);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(76, 185, 99, 0.3);
+    }
+
+    .chip .remove {
+      background: rgba(255,255,255,0.3);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .chip .remove:hover {
+      background: #ef4444;
+    }
+
+    .empty-state {
+      color: var(--sv-gray-600);
+      font-style: italic;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .action-bar {
+      margin-top: 30px;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .status-msg {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 0.95rem;
+    }
+
+    .success { background: #d1fae5; color: #157f1f; }
+    .error   { background: #fee2e2; color: #991b1b; }
+  </style>
+</head>
+<body>
+  <div class="sv-app-layout">
+    <div id="nav-container"></div>
+
+    <main class="sv-main-area">
+      <header class="sv-header">
+        <h1 class="sv-page-title">Expertise Management</h1>
+        <div class="sv-user-block">
+          <span class="sv-role-tag">Supervisor</span>
+          <span id="userName">Loading...</span>
+        </div>
+      </header>
+
+      <div class="expertise-container">
+        <p class="section-subtitle">Select your preferred research areas. These will help match you with relevant projects.</p>
+
+        <div class="expertise-grid">
+          <!-- Available Research Areas -->
+          <div class="available-box">
+            <h3>Available Research Areas</h3>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search research areas...">
+
+            <div class="research-list" id="availableList">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <div class="selected-box">
+            <h3>Your Selected Expertise <span id="selectedCount" style="color: #47479d;">(0)</span></h3>
+            
+            <div class="selected-chips" id="selectedChips">
+            </div>
+
+            <div id="statusMsg" class="status-msg" style="display:none;"></div>
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <button class="sv-btn sv-btn-outline" onclick="resetSelection()">Reset</button>
+          <button class="sv-btn sv-btn-primary" id="saveBtn" onclick="saveExpertise()"> Save Expertise</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/session.js"></script>
+  <script src="../js/include.js"></script>
+  <script>
+    let allResearchAreas = [];
+    let selectedIds = new Set();
+
+    const BASE_URL = "http://localhost:5037/api";
+
+    // Get supervisor ID from session
+    function getSupervisorId() {
+      const user = getSession();
+      return user ? user.id || user.supervisorId || 0 : 0;
+    }
+
+    // Fetch all available research areas
+    async function fetchAllResearchAreas() {
+      try {
+        const res = await fetch(`${BASE_URL}/Supervisor/research-areas`);
+        if (!res.ok) throw new Error("Failed to load research areas");
+        allResearchAreas = await res.json();
+        renderAvailableList();
+      } catch (err) {
+        showStatus("Failed to load research areas. Please try again.", "error");
+        console.error(err);
+      }
+    }
+
+    // Fetch supervisor's current research areas
+    async function fetchSupervisorResearchAreas() {
+      const supervisorId = getSupervisorId();
+      if (!supervisorId) return;
+
+      try {
+        const res = await fetch(`${BASE_URL}/Supervisor/${supervisorId}/research-areas`);
+        if (!res.ok) return; // No areas yet is okay
+
+        const data = await res.json();
+        selectedIds.clear();
+        data.forEach(area => selectedIds.add(area.id));
+        renderSelectedChips();
+      } catch (err) {
+        console.error("Could not load your current expertise", err);
+      }
+    }
+
+    // Render available list with checkboxes
+    function renderAvailableList(filter = "") {
+      const container = document.getElementById("availableList");
+      container.innerHTML = "";
+
+      const filtered = allResearchAreas.filter(area =>
+        area.name.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="empty-state">No matching research areas found.</div>`;
+        return;
+      }
+
+      filtered.forEach(area => {
+        const isChecked = selectedIds.has(area.id);
+
+        const div = document.createElement("div");
+        div.className = "research-item";
+        div.innerHTML = `
+          <input type="checkbox" id="area-${area.id}" ${isChecked ? "checked" : ""}>
+          <label for="area-${area.id}">${area.name}</label>
+        `;
+
+        div.querySelector("input").addEventListener("change", (e) => {
+          if (e.target.checked) {
+            selectedIds.add(area.id);
+          } else {
+            selectedIds.delete(area.id);
+          }
+          renderSelectedChips();
+        });
+
+        container.appendChild(div);
+      });
+    }
+
+    function renderSelectedChips() {
+      const container = document.getElementById("selectedChips");
+      const countEl = document.getElementById("selectedCount");
+      container.innerHTML = "";
+
+      countEl.textContent = `(${selectedIds.size})`;
+
+      if (selectedIds.size === 0) {
+        container.innerHTML = `<div class="empty-state">No expertise selected yet.</div>`;
+        return;
+      }
+
+      Array.from(selectedIds).forEach(id => {
+        const area = allResearchAreas.find(a => a.id === id);
+        if (!area) return;
+
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.innerHTML = `
+          ${area.name}
+          <span class="remove" onclick="removeArea(${id})">×</span>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    // Remove single area
+    window.removeArea = function(id) {
+      selectedIds.delete(id);
+      renderSelectedChips();
+      renderAvailableList(document.getElementById("searchInput").value);
+    };
+
+    // Save to backend
+    async function saveExpertise() {
+      const supervisorId = getSupervisorId();
+      if (!supervisorId) {
+        showStatus("Session expired. Please login again.", "error");
+        return;
+      }
+
+      const btn = document.getElementById("saveBtn");
+      btn.innerText = "Saving...";
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`${BASE_URL}/Supervisor/assign-research-areas`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            supervisorId: supervisorId,
+            researchAreaIds: Array.from(selectedIds)
+          })
+        });
+
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(errText || "Failed to save expertise");
+        }
+
+        showStatus("Expertise saved successfully!", "success");
+
+        // Refresh selected from server (in case backend changes anything)
+        setTimeout(() => fetchSupervisorResearchAreas(), 800);
+
+      } catch (err) {
+        showStatus("Error saving expertise: " + err.message, "error");
+        console.error(err);
+      } finally {
+        btn.innerText = "Save Expertise";
+        btn.disabled = false;
+      }
+    }
+
+    function resetSelection() {
+      if (confirm("Clear all selected expertise?")) {
+        selectedIds.clear();
+        renderSelectedChips();
+        renderAvailableList(document.getElementById("searchInput").value);
+      }
+    }
+
+    function showStatus(message, type) {
+      const msgEl = document.getElementById("statusMsg");
+      msgEl.textContent = message;
+      msgEl.className = `status-msg ${type}`;
+      msgEl.style.display = "block";
+
+      setTimeout(() => {
+        msgEl.style.display = "none";
+      }, 5000);
+    }
+
+    // Initialize page
+    document.addEventListener("DOMContentLoaded", async () => {
+      const user = requireAuth();
+      if (!user) return;
+
+      document.getElementById("userName").textContent = user.fullName || "Supervisor";
+
+      // Load data
+      await fetchAllResearchAreas();
+      await fetchSupervisorResearchAreas();
+
+      // Search functionality
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        renderAvailableList(e.target.value);
+      });
+    });
+  </script>
+</body>
+</html>

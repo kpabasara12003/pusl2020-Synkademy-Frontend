@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit New Project</title>
+  <link rel="stylesheet" href="submit_N.css">
+</head>
+<body>
+
+<div class="page">
+  <nav class="nav">
+    <div class="logo"></div>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="project_d.html">Projects</a>
+      <a href="project_d.html" class="active">Submit</a>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-text">
+        <div class="hero-badge">New Submission</div>
+        <h1>Submit New Project</h1>
+        <p>Fill in the details below to register your academic project</p>
+      </div>
+      <div class="hero-icon">
+        <span>Form</span>
+        <strong>+</strong>
+      </div>
+    </div>
+
+    <div class="grid">
+
+  
+      <div class="left">
+
+        
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon gold"></div>
+            <h3>Project Information</h3>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Project Title <span>*</span></label>
+            <input type="text" id="proj-title" placeholder="e.g. AI Chatbot System" maxlength="80" oninput="updatePreview()">
+            <div class="char-count"><span id="title-count">0</span>/80</div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Abstract <span>*</span></label>
+            <textarea id="proj-abstract" placeholder="Briefly describe your project, its goals, and expected outcomes..." maxlength="400" rows="4" oninput="updateAbstractCount()"></textarea>
+            <div class="char-count"><span id="abstract-count">0</span>/400</div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Project Year <span>*</span></label>
+            <select id="proj-year" onchange="updatePreview()">
+              <option value="">Select year...</option>
+              <option value="2025" selected>2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Duration</label>
+            <select id="proj-duration" onchange="updatePreview()">
+              <option value="6 Months">6 Months</option>
+              <option value="12 Months" selected>12 Months</option>
+              <option value="18 Months">18 Months</option>
+              <option value="24 Months">24 Months</option>
+            </select>
+          </div>
+        </div>
+
+       
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon mint"></div>
+            <h3>Technology Stack</h3>
+          </div>
+          <div class="tags-row" id="tags-row">
+            <span class="stack-tag py selected" onclick="toggleTag(this)">Python</span>
+            <span class="stack-tag api" onclick="toggleTag(this)">FastAPI</span>
+            <span class="stack-tag react" onclick="toggleTag(this)">React</span>
+            <span class="stack-tag gpt" onclick="toggleTag(this)">GPT</span>
+            <span class="stack-tag docker" onclick="toggleTag(this)">Docker</span>
+            <span class="stack-tag ts" onclick="toggleTag(this)">TypeScript</span>
+          </div>
+          <p class="hint">Click to select the technologies used in your project.</p>
+        </div>
+
+      
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon violet"></div>
+            <h3>Supervisor &amp; Team</h3>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Supervisor Name <span>*</span></label>
+            <input type="text" id="supervisor" placeholder="e.g. Dr. A. Rahman" oninput="updatePreview()">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Department</label>
+            <input type="text" id="department" placeholder="e.g. Faculty of Computing">
+          </div>
+          <div class="field-group last">
+            <label class="field-label">Number of Members</label>
+            <select id="members" onchange="updatePreview()">
+              <option value="1">1 Member</option>
+              <option value="2">2 Members</option>
+              <option value="3" selected>3 Members</option>
+              <option value="4">4 Members</option>
+              <option value="5">5 Members</option>
+            </select>
+          </div>
+        </div>
+
+      </div><!-- /LEFT -->
+
+      <!-- RIGHT COLUMN -->
+      <div class="right">
+
+        <!-- GUIDELINES + SUBMIT CARD -->
+        <div class="status-card">
+          <h3>Submission Guidelines</h3>
+          <ul class="guideline-list">
+            <li><span class="g-dot gold"></span>Project title must be clear and descriptive.</li>
+            <li><span class="g-dot mint"></span>Abstract should be at least 100 characters.</li>
+            <li><span class="g-dot violet"></span>Select all relevant technologies used.</li>
+            <li><span class="g-dot gold"></span>Status will be set to Pending Review automatically.</li>
+            <li><span class="g-dot mint"></span>A unique Project ID will be assigned on submission.</li>
+          </ul>
+          <button class="submit-btn" onclick="handleSubmit()">Submit Project</button>
+          <button class="save-btn" onclick="handleSave()">Save as Draft</button>
+          <div class="success-toast" id="toast"></div>
+        </div>
+
+        <!-- RESEARCH AREA CARD -->
+        <div class="cat-card">
+          <p class="cat-label">Research Area</p>
+          <div class="cat-chips">
+            <button class="cat-chip active" onclick="selectCat(this)"><span class="chip-icon"></span>AI / Machine Learning</button>
+            <button class="cat-chip" onclick="selectCat(this)"><span class="chip-icon"></span>Web Development</button>
+            <button class="cat-chip" onclick="selectCat(this)"><span class="chip-icon"></span>Cybersecurity</button>
+            <button class="cat-chip" onclick="selectCat(this)"><span class="chip-icon"></span>Data Science</button>
+            <button class="cat-chip" onclick="selectCat(this)"><span class="chip-icon"></span>Mobile Development</button>
+          </div>
+        </div>
+
+        <!-- PREVIEW CARD -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon gold"></div>
+            <h3>Submission Preview</h3>
+          </div>
+          <div class="info-rows">
+            <div class="info-row">
+              <span class="info-label">Project ID</span>
+              <span class="info-val violet">Auto-assigned</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Title</span>
+              <span class="info-val placeholder" id="prev-title">Not entered</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Year</span>
+              <span class="info-val navy" id="prev-year">2025</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Duration</span>
+              <span class="info-val" id="prev-duration">12 Months</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Supervisor</span>
+              <span class="info-val placeholder" id="prev-supervisor">Not entered</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Members</span>
+              <span class="info-val mint" id="prev-members">3</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Status</span>
+              <span class="info-val amber">Pending Review</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /RIGHT -->
+    </div><!-- /GRID -->
+  </div><!-- /CONTAINER -->
+</div><!-- /PAGE -->
+
+<script>
+  function toggleTag(el) {
+    el.classList.toggle('selected');
+  }
+
+  function selectCat(el) {
+    document.querySelectorAll('.cat-chip').forEach(function(c) { c.classList.remove('active'); });
+    el.classList.add('active');
+  }
+
+  function updatePreview() {
+    var title = document.getElementById('proj-title').value;
+    var prevTitle = document.getElementById('prev-title');
+    if (title.trim()) {
+      prevTitle.textContent = title.length > 22 ? title.substring(0, 22) + '…' : title;
+      prevTitle.classList.remove('placeholder');
+    } else {
+      prevTitle.textContent = 'Not entered';
+      prevTitle.classList.add('placeholder');
+    }
+
+    var year = document.getElementById('proj-year').value;
+    document.getElementById('prev-year').textContent = year || '—';
+    document.getElementById('prev-duration').textContent = document.getElementById('proj-duration').value;
+
+    var sup = document.getElementById('supervisor').value;
+    var prevSup = document.getElementById('prev-supervisor');
+    if (sup.trim()) {
+      prevSup.textContent = sup;
+      prevSup.classList.remove('placeholder');
+    } else {
+      prevSup.textContent = 'Not entered';
+      prevSup.classList.add('placeholder');
+    }
+
+    document.getElementById('prev-members').textContent = document.getElementById('members').value;
+  }
+
+  function updateAbstractCount() {
+    document.getElementById('abstract-count').textContent = document.getElementById('proj-abstract').value.length;
+  }
+
+  document.getElementById('proj-title').addEventListener('input', function() {
+    document.getElementById('title-count').textContent = this.value.length;
+    updatePreview();
+  });
+
+  function handleSubmit() {
+    var title      = document.getElementById('proj-title').value.trim();
+    var abstract   = document.getElementById('proj-abstract').value.trim();
+    var supervisor = document.getElementById('supervisor').value.trim();
+    var toast      = document.getElementById('toast');
+
+    if (!title || !abstract || !supervisor) {
+      toast.className = 'success-toast error';
+      toast.textContent = 'Please fill in all required fields (*)';
+      toast.style.display = 'block';
+      return;
+    }
+
+    toast.className = 'success-toast success';
+    toast.textContent = 'Project submitted successfully!';
+    toast.style.display = 'block';
+  }
+
+  function handleSave() {
+    var toast = document.getElementById('toast');
+    toast.className = 'success-toast draft';
+    toast.textContent = 'Draft saved successfully.';
+    toast.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

@@ -1,17 +1,667 @@
-<body onload="checkAuth()">
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synkademy Student Dashboard</title>
 
-<h2 id="welcome"></h2>
-<p id="studentId"></p>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<button onclick="logout()">Logout</button>
+  <style>
+    :root {
+      /* New palette from design */
+      --green: #157F1F;   /* primary dark green */
+      --jade: #4CB963;    /* secondary green */
+      --gold: #FBC02D;    /* accent gold */
+      --jasmine: #F9FBF9; /* very light background */
+      --bg: #F9FBF9;      /* page background */
+      --text: #1B1B1B;    /* primary text (black) */
+      --card: #FFFFFF;    /* card background */
+      --muted: #47479D;   /* accent/muted (indigo) */
+      --border: #E6ECE6;
+      --shadow: 0 18px 45px rgba(21, 127, 31, 0.06);
+    }
 
-<script src="js/auth.js"></script>
-<script>
-document.getElementById=
-    "Student No: " + getCookie("studentNumber");
-</script>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Manrope', sans-serif;
+      color: inherit;
+    }
 
-</body>("welcome").innerText =
-    "Welcome " + getCookie("fullName");
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-document.getElementById("studentId").innerText 
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: -1;
+      border-radius: 50%;
+      opacity: 0.65;
+    }
+
+    body::before {
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(251, 192, 45, 0.35), transparent 70%);
+      top: -120px;
+      right: -120px;
+    }
+
+    body::after {
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(43, 195, 51, 0.25), transparent 70%);
+      bottom: -160px;
+      left: -160px;
+    }
+
+    .sidebar {
+      background: #ffffff;
+      border-right: 1px solid var(--border);
+      padding: 28px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, var(--green), var(--jade));
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .brand h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .profile {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .profile h2 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .profile span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .nav {
+      display: grid;
+      gap: 12px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      padding: 12px 14px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: 14px;
+      border: 1px solid transparent;
+      transition: 0.25s ease;
+    }
+
+    .nav a.active {
+      background: rgba(17, 127, 23, 0.12);
+      border-color: rgba(17, 127, 23, 0.2);
+      color: var(--green);
+    }
+
+    .nav a:hover {
+      background: rgba(43, 195, 51, 0.12);
+      border-color: rgba(43, 195, 51, 0.25);
+    }
+
+    .nav span {
+      font-size: 12px;
+      color: var(--muted);
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      background: var(--jasmine);
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .sidebar-footer strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--green);
+    }
+
+    .main {
+      padding: 28px 34px 40px;
+      display: grid;
+      gap: 26px;
+      animation: fadeIn 0.7s ease;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .welcome h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 32px;
+      margin-bottom: 6px;
+    }
+
+    .welcome p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 16px;
+      min-width: 240px;
+      box-shadow: var(--shadow);
+    }
+
+    .search input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .pill {
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .pill.primary {
+      background: var(--green);
+      color: #ffffff;
+      border-color: transparent;
+    }
+
+    .pill:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+      box-shadow: var(--shadow);
+      transition: 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .stat-title {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .stat-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel h3 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 10px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      margin-top: 6px;
+    }
+
+    .timeline-item p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .timeline-item span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .status {
+      display: grid;
+      gap: 14px;
+    }
+
+    .status-box {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(250, 222, 147, 0.45);
+      border: 1px solid rgba(251, 192, 45, 0.4);
+    }
+
+    .status-box strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .status-progress {
+      height: 8px;
+      background: #f2f2f2;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .status-progress span {
+      display: block;
+      height: 100%;
+      width: 68%;
+      background: linear-gradient(90deg, var(--gold), var(--jade));
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mini-card {
+      border-radius: 18px;
+      padding: 18px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      display: grid;
+      gap: 8px;
+      transition: 0.3s ease;
+    }
+
+    .mini-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      color: var(--green);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .table th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .status-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .pending {
+      background: rgba(251, 192, 45, 0.2);
+      color: #8a6300;
+    }
+
+    .review {
+      background: rgba(43, 195, 51, 0.2);
+      color: #1d7a2a;
+    }
+
+    .matched {
+      background: rgba(17, 127, 23, 0.2);
+      color: #0d4b0d;
+    }
+
+    .footer {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      padding-top: 8px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1100px) {
+      body {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .main {
+        padding: 24px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .search {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <div>
+        <h1>Synkademy</h1>
+        <span style="font-size:12px;color:var(--muted);">Student Dashboard</span>
+      </div>
+    </div>
+
+    <div class="profile">
+      <h2 id="profileName">Hi, Student</h2>
+      <span id="profileStudentNo">Student Number: -</span>
+      <span id="profileArea">Research Area: Not Set</span>
+    </div>
+
+    <nav class="nav">
+      <a class="active" href="#">Overview <span>Today</span></a>
+      <a href="proposal.html">Proposals <span>1</span></a>
+      <a href="#">Supervisor Match <span>1</span></a>
+      <a href="#">Milestones <span>4</span></a>
+      <a href="#">Messages <span>2</span></a>
+      <a href="#">Settings <span>New</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <strong>Blind Match Mode</strong>
+      Supervisor details reveal after confirmation to keep selections fair and unbiased.
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="welcome">
+        <h2>Project Approval Snapshot</h2>
+        <p>Track your submissions, reviews, and matching in one place.</p>
+      </div>
+
+      <div class="actions">
+        <div class="search">
+          <input type="text" placeholder="Search proposals or supervisors">
+        </div>
+        <button class="pill">Save Draft</button>
+        <a class="pill primary" id="newProposalBtn" href="submit_N.html">New Proposal</a>
+      </div>
+    </header>
+
+    <section class="stats">
+      <div class="stat-card">
+        <p class="stat-title">Submission Status</p>
+        <p class="stat-value" id="submissionStatus">Under Review</p>
+        <p class="stat-meta" id="submissionMeta">Last updated 2 hours ago</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-title">Proposals Sent</p>
+        <p class="stat-value" id="proposalCount">1</p>
+        <p class="stat-meta">Only one proposal allowed</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-title">Supervisor Matches</p>
+        <p class="stat-value">1</p>
+        <p class="stat-meta">Awaiting confirmation</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-title">Milestones</p>
+        <p class="stat-value">4</p>
+        <p class="stat-meta">Next due in 6 days</p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h3>Approval Timeline</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="dot"></span>
+            <div>
+              <p>Proposal submitted: "Smart Campus Navigation"</p>
+              <span>April 03, 2026 - Status: Pending Review</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <span class="dot"></span>
+            <div>
+              <p>Supervisor interest received from Web Systems Pool</p>
+              <span>April 06, 2026 - Awaiting confirmation</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <span class="dot"></span>
+            <div>
+              <p>Identity reveal scheduled upon confirmation</p>
+              <span>April 10, 2026 - Planned</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel status">
+        <h3>Matching Progress</h3>
+        <div class="status-box">
+          <strong>Blind Review Stage</strong>
+          Supervisor is reviewing your proposal details without identity data.
+        </div>
+        <div>
+          <div class="status-progress"><span></span></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px;">68% toward match confirmation</p>
+        </div>
+        <button class="pill primary">Send Follow Up</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3>Quick Actions</h3>
+      <div class="cards">
+        <div class="mini-card">
+          <span class="tag">RESEARCH STACK</span>
+          <strong>Update Tech Stack</strong>
+          <p style="font-size:13px;color:var(--muted);">Refine tools and frameworks to align with supervisor focus.</p>
+        </div>
+        <div class="mini-card">
+          <span class="tag">DOCUMENTS</span>
+          <strong>Upload Proposal PDF</strong>
+          <p style="font-size:13px;color:var(--muted);">Attach diagrams, models, or feasibility studies.</p>
+        </div>
+        <div class="mini-card">
+          <span class="tag">COMMUNICATION</span>
+          <strong>Message Module Leader</strong>
+          <p style="font-size:13px;color:var(--muted);">Clarify review timeline or resource requirements.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="proposalsSection">
+      <h3>Recent Proposal</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Area</th>
+            <th>Submitted</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="proposalTableBody">
+          <tr>
+            <td>Smart Campus Navigation</td>
+            <td>Web Development</td>
+            <td>April 03, 2026</td>
+            <td><span class="status-pill review">Under Review</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="footer">Copyright 2026 Synkademy Student Application</div>
+  </main>
+
+    <!-- scripts -->
+    <script src="auth.js"></script>
+    <script src="project.js"></script>
+  </body>
+</html>

@@ -42,6 +42,10 @@ async function login() {
 
         setSession(data, 60);
 
+        // Store studentId in session storage (try multiple property names returned by API)
+        const sid = data.studentId || data.id || data.userId || data.studentNumber;
+        if (sid) sessionStorage.setItem("studentId", sid);
+
         window.location.href = "dashboard.html";
 
     } catch (err) {

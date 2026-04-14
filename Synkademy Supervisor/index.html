@@ -54,18 +54,23 @@ body{
   </form>
 </div>
 
-<script src="auth.js"></script>
+<script src="js/session.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", login);
 
-<script>
-document.getElementById("loginForm").addEventListener("submit", login);
-
-function togglePass(){
-  const p=document.getElementById("password");
-  const t=document.getElementById("toggleText");
-  if(p.type==="password"){p.type="text";t.innerText="Hide";}else{p.type="password";t.innerText="Show";}
-}
-
-</script>
+    function togglePass() {
+      const p = document.getElementById("password");
+      const t = document.getElementById("toggleText");
+      if (p.type === "password") {
+        p.type = "text";
+        t.innerText = "Hide";
+      } else {
+        p.type = "password";
+        t.innerText = "Show";
+      }
+    }
+  </script>
 
 </body>
 </html>
