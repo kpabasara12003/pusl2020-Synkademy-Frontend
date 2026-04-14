@@ -31,7 +31,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Typography Utilities */
 .text-muted { color: var(--text-secondary); }
 .text-small { font-size: 0.875rem; }
 .fw-bold { font-weight: 600; }
@@ -39,7 +38,6 @@ body {
 .text-success { color: var(--status-success); }
 .text-warning { color: var(--status-warning); }
 
-/* Application Header */
 .app-header {
     background-color: var(--brand-primary);
     color: #FFFFFF;
@@ -131,7 +129,6 @@ body {
     color: #94A3B8;
 }
 
-/* Buttons */
 button {
     font-family: inherit;
     cursor: pointer;
@@ -189,7 +186,6 @@ button {
 
 .btn-text:hover { text-decoration: underline; }
 
-/* Workspace Layout */
 .workspace {
     max-width: 1280px;
     margin: 0 auto;
@@ -236,7 +232,6 @@ button {
     box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.03);
 }
 
-/* Accent Left Borders */
 .kpi-card::before {
     content: '';
     position: absolute;
@@ -250,7 +245,6 @@ button {
 .card-success::before { background-color: var(--status-success); }
 .card-warning::before { background-color: var(--status-warning); }
 
-/* Card Top Row (Icon & Dot) */
 .kpi-top {
     display: flex;
     justify-content: space-between;
@@ -258,7 +252,6 @@ button {
     margin-bottom: 1rem;
 }
 
-/* Styled Icons */
 .kpi-icon {
     width: 48px;
     height: 48px;
@@ -269,13 +262,13 @@ button {
 }
 
 .icon-total { 
-    background-color: #EFF6FF; /* Very light blue */
+    background-color: #EFF6FF; 
     color: var(--brand-accent); 
 }
 
 .icon-success { 
     background-color: var(--status-success-bg); 
-    color: #059669; /* Darker green for contrast */
+    color: #059669; 
 }
 
 .icon-warning { 
@@ -283,7 +276,6 @@ button {
     color: #D97706; 
 }
 
-/* Content Layout */
 .kpi-content {
     display: flex;
     flex-direction: column;
@@ -311,7 +303,6 @@ button {
     font-weight: 500;
 }
 
-/* Status Dots */
 .status-indicator {
     width: 10px;
     height: 10px;
@@ -404,7 +395,6 @@ button {
     background-color: #F8FAFC;
 }
 
-/* Badges */
 .badge {
     display: inline-flex;
     align-items: center;
@@ -424,7 +414,6 @@ button {
     color: #92400E;
 }
 
-/* Quick Actions Layout */
 .quick-actions {
     display: flex;
     gap: 0.75rem;
@@ -432,7 +421,6 @@ button {
     align-items: center;
 }
 
-/* Danger Button Style */
 .btn-danger {
     background-color: #FEF2F2;
     color: #DC2626;
@@ -450,7 +438,6 @@ button {
     border-color: #FCA5A5;
 }
 
-/* Table Filtering Tabs */
 .panel-tabs {
     display: flex;
     gap: 2rem;
@@ -479,7 +466,6 @@ button {
     border-bottom-color: var(--brand-accent);
 }
 
-/* Context-Sensitive Table Actions */
 .action-group {
     display: flex;
     justify-content: flex-end;
@@ -505,7 +491,6 @@ button {
     color: #FFFFFF;
 }
 
-/* Destructive Table Action */
 .text-danger {
     color: #DC2626;
 }
@@ -515,7 +500,6 @@ button {
     text-decoration: underline;
 }
 
-/* Filter Dropdowns */
 .filter-dropdown {
     padding: 0.5rem 2rem 0.5rem 1rem;
     border: 1px solid var(--border-color);
@@ -538,4 +522,239 @@ button {
 .filter-dropdown:focus {
     border-color: var(--brand-accent);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.6); 
+    backdrop-filter: blur(4px); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    background: var(--bg-surface);
+    width: 100%; max-width: 650px;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    max-height: 90vh; 
+    display: flex;
+    flex-direction: column;
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(15px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header, .modal-footer {
+    padding: 1.25rem 1.5rem;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-body);
+    justify-content: flex-end; 
+    gap: 0.75rem;
+}
+
+.modal-body { 
+    padding: 1.5rem; 
+    overflow-y: auto; 
+}
+
+.btn-close { 
+    background: none; border: none; 
+    font-size: 1.5rem; cursor: pointer; 
+    color: var(--text-secondary); transition: color 0.2s;
+}
+.btn-close:hover { color: #DC2626; }
+
+/* Modal Inner Content */
+.meta-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+.modal-title { margin-bottom: 1.5rem; font-size: 1.25rem; color: var(--text-primary); }
+
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.detail-group label { 
+    display: block; font-size: 0.75rem; font-weight: 600; 
+    text-transform: uppercase; letter-spacing: 0.05em; 
+    color: var(--text-secondary); margin-bottom: 0.25rem; 
+}
+
+.text-primary { color: var(--brand-accent); }
+
+.abstract-section { 
+    background: var(--bg-body); padding: 1.25rem; 
+    border-radius: 8px; border: 1px solid var(--border-color); 
+}
+.abstract-section label { 
+    font-size: 0.85rem; font-weight: 600; color: var(--text-primary); 
+}
+.abstract-section p { font-size: 0.875rem; line-height: 1.6; margin-top: 0.5rem; }
+
+.badge-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+}
+
+.area-badge {
+    background-color: #EFF6FF;
+    color: #1D4ED8;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid #BFDBFE;
+}
+
+.tag-badge {
+    background-color: #F8FAFC;
+    color: #475569;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid #E2E8F0;
+}
+
+.modal-hero {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+}
+
+.hero-badges {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.hero-title {
+    font-size: 1.5rem;
+    color: var(--brand-primary);
+    line-height: 1.3;
+    margin: 0;
+}
+
+.badge-secondary {
+    background-color: #F1F5F9;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+}
+
+.form-section {
+    background-color: #F8FAFC;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.info-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+.info-value {
+    font-size: 0.9rem;
+}
+
+.text-dark {
+    color: var(--brand-primary);
+}
+
+.divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 1.25rem 0;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}
+
+.wrap-text {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-line; 
+}
+
+.success-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg-surface);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.checkmark-circle {
+    width: 80px; height: 80px;
+    position: relative;
+    display: inline-block;
+}
+
+.checkmark-circle .background {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: #22C55E; 
+    position: absolute;
+}
+
+.checkmark-circle .checkmark.draw:after {
+    animation-duration: 800ms;
+    animation-timing-function: ease;
+    animation-name: checkmark;
+    transform: scaleX(-1) rotate(135deg);
+}
+
+.checkmark-circle .checkmark:after {
+    opacity: 1;
+    height: 40px; width: 20px;
+    transform-origin: left top;
+    border-right: 4px solid white;
+    border-top: 4px solid white;
+    content: '';
+    left: 20px; top: 40px;
+    position: absolute;
+}
+
+@keyframes checkmark {
+    0% { height: 0; width: 0; opacity: 1; }
+    20% { height: 0; width: 20px; opacity: 1; }
+    40% { height: 40px; width: 20px; opacity: 1; }
+    100% { height: 40px; width: 20px; opacity: 1; }
+}
+
+.text-success {
+    color: #22C55E;
 }
