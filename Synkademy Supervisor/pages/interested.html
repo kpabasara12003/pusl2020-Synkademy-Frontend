@@ -149,12 +149,22 @@
       <div id="detail-view" style="display: none;">
         <button class="btn-back" onclick="showListView()">← Back to List</button>
         
-        <h2 id="detail-title" style="color: var(--sys-navy); margin-bottom: 12px; font-size: 1.8rem;">Project Title</h2>
-        <div id="detail-areas" style="margin-bottom: 24px;"></div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 16px;">
+            <h2 id="detail-title" style="color: var(--sys-navy); margin: 0; font-size: 1.8rem;">Project Title</h2>
+            <span id="detail-date" style="color: var(--sv-gray-600); font-size: 0.9rem; font-weight: 500;"></span>
+        </div>
+        
+        <div id="detail-areas" style="margin-bottom: 8px;"></div>
+        <div id="detail-tags" style="margin-bottom: 24px;"></div>
         
         <div class="detail-section">
-          <h4>Proposal Abstract</h4>
-          <p id="detail-desc" style="color: var(--sys-text); line-height: 1.6;"></p>
+          <h4>Brief Overview</h4>
+          <p id="detail-desc" style="color: var(--sv-gray-600); font-size: 1rem; font-style: italic;"></p>
+        </div>
+
+        <div class="detail-section">
+          <h4>Full Proposal Abstract</h4>
+          <p id="detail-abstract" style="color: var(--sys-text); line-height: 1.6;"></p>
         </div>
 
         <div class="detail-section">

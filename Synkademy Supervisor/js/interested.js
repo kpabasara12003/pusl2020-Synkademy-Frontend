@@ -76,20 +76,52 @@ function handleSearch(e) {
 }
 
 // 4. View Toggling
-function showDetailView(id) {
-  currentProject = allInterests.find(p => p.id === id);
-  if (!currentProject) return;
-
-
-  document.getElementById("detail-title").textContent = currentProject.title;
-  document.getElementById("detail-desc").textContent = currentProject.shortDescription || "None provided.";
-  document.getElementById("detail-tech").textContent = currentProject.techStack || "None specified.";
-  document.getElementById("detail-areas").innerHTML = currentProject.researchAreas
-    .map(area => `<span class="area-chip">${area}</span>`).join("");
-
-
+async function showDetailView(id) {
   document.getElementById("list-view").style.display = "none";
   document.getElementById("detail-view").style.display = "block";
+  
+  document.getElementById("detail-title").textContent = "Loading details...";
+  document.getElementById("detail-desc").textContent = "Please wait...";
+  document.getElementById("detail-tech").textContent = "";
+  document.getElementById("detail-areas").innerHTML = "";
+
+  try {
+    const res = await fetch(`${BASE_URL}/BlindReview/project/${id}`);
+    if (!res.ok) throw new Error("Failed to load project details");
+    
+    currentProject = await res.json();
+
+    document.getElementById("detail-title").textContent = currentProject.title;
+    document.getElementById("detail-desc").textContent = currentProject.shortDescription || "No short description provided.";
+    document.getElementById("detail-abstract").textContent = currentProject.abstract || "No abstract provided.";
+    document.getElementById("detail-tech").textContent = currentProject.techStack || "None specified.";
+
+    if (currentProject.createdAt) {
+        const dateObj = new Date(currentProject.createdAt);
+        document.getElementById("detail-date").textContent = "Submitted: " + dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    } else {
+        document.getElementById("detail-date").textContent = "";
+    }
+    
+    if (currentProject.researchAreas && currentProject.researchAreas.length > 0) {
+        document.getElementById("detail-areas").innerHTML = currentProject.researchAreas
+          .map(area => `<span class="area-chip">${area}</span>`).join("");
+    } else {
+        document.getElementById("detail-areas").innerHTML = "";
+    }
+
+    if (currentProject.tags && currentProject.tags.length > 0) {
+        document.getElementById("detail-tags").innerHTML = currentProject.tags
+          .map(tag => `<span style="background: #f1f5f9; color: var(--sys-navy); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 6px; display: inline-block;">#${tag}</span>`).join("");
+    } else {
+        document.getElementById("detail-tags").innerHTML = "";
+    }
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("detail-title").textContent = "Error Loading Project";
+    document.getElementById("detail-desc").textContent = "There was an issue retrieving this project's details from the server.";
+  }
 }
 
 function showListView() {
