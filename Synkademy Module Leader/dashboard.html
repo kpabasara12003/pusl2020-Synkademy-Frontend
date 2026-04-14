@@ -90,12 +90,6 @@
                         <option value="all">All Research Areas</option>
                         </select>
 
-                    <select class="filter-dropdown" id="filter-status">
-                        <option value="all">All Statuses</option>
-                        <option value="pending">Pending</option>
-                        <option value="matched">Matched</option>
-                    </select>
-
                     <select class="filter-dropdown" id="filter-supervisor">
                         <option value="all">All Supervisors</option>
                         </select>
@@ -128,8 +122,142 @@
 
     </main>
 
+<div id="reviewModal" class="modal-backdrop" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Project Review</h2>
+                <button class="btn-close" onclick="closeModal('reviewModal')">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="modal-hero">
+                    <div class="hero-badges">
+                        <span id="rev-prj-id" class="badge badge-secondary"></span>
+                        <span id="rev-prj-status" class="badge"></span>
+                    </div>
+                    <h3 id="rev-prj-title" class="hero-title"></h3>
+                </div>
+                
+                <div class="form-section">
+                    <div class="info-grid">
+                        <div class="info-group">
+                            <label>Student Identity</label>
+                            <div id="rev-prj-student" class="info-value text-muted"></div> 
+                        </div>
+                        <div class="info-group">
+                            <label>Tech Stack</label>
+                            <div id="rev-prj-tech" class="info-value fw-bold text-dark"></div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="info-grid">
+                        <div class="info-group">
+                            <label>Research Areas</label>
+                            <div id="rev-prj-areas"></div>
+                        </div>
+                        <div class="info-group">
+                            <label>Project Tags</label>
+                            <div id="rev-prj-tags"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="abstract-section mt-4">
+                    <label>Abstract / Description</label>
+                    <p id="rev-prj-abstract" class="text-muted wrap-text"></p>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('reviewModal')">Close</button>
+                <button class="btn-primary" id="rev-btn-download">Download Proposal</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="assignModal" class="modal-backdrop" style="display: none;">
+        <div class="modal-container" style="position: relative;"> 
+            
+            <div id="assign-success-overlay" class="success-overlay" style="display: none;">
+                <div class="checkmark-circle">
+                    <div class="background"></div>
+                    <div class="checkmark draw"></div>
+                </div>
+                <h3 class="text-success" style="margin-top: 1.5rem;">Assignment Saved!</h3>
+            </div>
+
+            <div class="modal-header">
+                <h2>Assign Supervisor</h2>
+                <button class="btn-close" onclick="closeModal('assignModal')">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="modal-hero" style="margin-bottom: 1.5rem;">
+                    <div class="hero-badges">
+                        <span id="ass-prj-id" class="badge badge-secondary"></span>
+                    </div>
+                    <h3 id="ass-prj-title" class="hero-title" style="font-size: 1.25rem;"></h3>
+                </div>
+                
+                <div class="form-section">
+                    <div class="info-grid">
+                        <div class="info-group">
+                            <label>Student</label>
+                            <div id="ass-prj-student" class="info-value text-muted"></div> 
+                        </div>
+                        <div class="info-group">
+                            <label>Current Supervisor</label>
+                            <div id="ass-prj-current-sup" class="info-value fw-bold text-dark"></div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="info-group">
+                        <label for="ass-select-sup">Select New Supervisor</label>
+                        <select id="ass-select-sup" class="filter-dropdown" style="width: 100%; margin-top: 0.5rem; border-color: var(--border-color);">
+                            </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('assignModal')">Cancel</button>
+                <button class="btn-primary" onclick="saveAssignment()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+        <div id="breakMatchModal" class="modal-backdrop" style="display: none;">
+        <div class="modal-container" style="max-width: 400px; text-align: center;">
+            <div class="modal-body" style="padding: 2.5rem 1.5rem 1.5rem 1.5rem;">
+                <div style="width: 60px; height: 60px; background: #FEF2F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                
+                <h3 style="margin-bottom: 0.75rem; color: #111827;">Break this match?</h3>
+                <p class="text-muted" style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0;">
+                    This will remove the assigned supervisor and return the project to the pending queue. The student's identity will be hidden again.
+                </p>
+            </div>
+            
+            <div class="modal-footer" style="justify-content: center; background: #F9FAFB; border-top: none; padding: 1.25rem;">
+                <button class="btn-secondary" style="width: 45%;" onclick="closeModal('breakMatchModal')">Cancel</button>
+                <button class="btn-primary" style="width: 45%; background-color: #DC2626; border-color: #DC2626;" onclick="executeBreakMatch()">Break Match</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+    let currentBreakingProjectId = null;
     let allProjects = [];
+    let currentAssigningProjectId = null;
 
     const SESSION_NAME = "synkademy_moduleleader_session";
     const user = getSession(SESSION_NAME);
@@ -166,6 +294,7 @@
             }
 
             const data = await response.json(); 
+            allSupervisors = data.availableSupervisors;
             allProjects = data.projects;
 
             document.getElementById("kpi-total").innerText = data.totalProposals;
@@ -209,15 +338,15 @@
             const badgeClass = isMatched ? "badge-success" : "badge-warning";
             
             let actionsHtml = "";
-            if (isMatched) {
+           if (isMatched) {
                 actionsHtml = `
-                    <button class="btn-outline-primary btn-sm">Reassign</button>
-                    <button class="btn-text text-danger">Break Match</button>
+                    <button class="btn-outline-primary btn-sm" onclick="openAssignModal(${p.projectId})">Reassign</button>
+                    <button class="btn-text text-danger" onclick="promptBreakMatch(${p.projectId})">Break Match</button>
                 `;
             } else {
                 actionsHtml = `
-                    <button class="btn-text">Review</button>
-                    <button class="btn-outline-primary btn-sm">Assign</button>
+                    <button class="btn-text" onclick="openReviewModal(${p.projectId})">Review</button>
+                    <button class="btn-outline-primary btn-sm" onclick="openAssignModal(${p.projectId})">Assign</button>
                 `;
             }
 
@@ -244,7 +373,6 @@
     function applyFilters() {
         const searchTerm = document.getElementById("search-input").value.toLowerCase();
         const researchFilter = document.getElementById("filter-research").value.toLowerCase();
-        const statusFilter = document.getElementById("filter-status").value.toLowerCase();
         const supervisorFilter = document.getElementById("filter-supervisor").value.toLowerCase();
 
         const activeTab = document.querySelector(".tab-btn.active").innerText.toLowerCase();
@@ -257,7 +385,6 @@
             if (!matchesSearch) return false;
 
             if (researchFilter !== "all" && !p.researchAreas.some(ra => ra.toLowerCase() === researchFilter)) return false;
-            if (statusFilter !== "all" && p.status.toLowerCase() !== statusFilter) return false;
             if (supervisorFilter !== "all" && p.supervisorName.toLowerCase() !== supervisorFilter) return false;
 
             return true;
@@ -279,7 +406,6 @@
         document.getElementById("search-input").addEventListener("input", applyFilters);
 
         document.getElementById("filter-research").addEventListener("change", applyFilters);
-        document.getElementById("filter-status").addEventListener("change", applyFilters);
         document.getElementById("filter-supervisor").addEventListener("change", applyFilters);
     }
 
@@ -287,6 +413,152 @@
         loadDashboardData();
         setupEventListeners(); 
     });
+
+    function openReviewModal(projectId) {
+        const project = allProjects.find(p => p.projectId === projectId);
+        if (!project) return;
+
+        document.getElementById('rev-prj-id').innerText = `#PRJ-${project.projectId}`;
+        document.getElementById('rev-prj-title').innerText = project.title;
+
+        const areasDiv = document.getElementById('rev-prj-areas');
+        areasDiv.className = "badge-list";
+        areasDiv.innerHTML = project.researchAreas.map(a => `<span class="area-badge">${a}</span>`).join('');
+       
+        document.getElementById('rev-prj-student').innerText = project.studentName;
+        
+        const tagsDiv = document.getElementById('rev-prj-tags');
+        tagsDiv.className = "badge-list";
+        tagsDiv.innerHTML = project.tags && project.tags.length > 0 
+            ? project.tags.map(t => `<span class="tag-badge">${t}</span>`).join('') 
+            : "<span class='text-muted' style='font-size: 0.85rem;'>No tags attached</span>";    
+
+        const isMatched = project.status.toLowerCase() === "matched";
+        const badge = document.getElementById('rev-prj-status');
+        badge.className = `badge ${isMatched ? 'badge-success' : 'badge-warning'}`;
+        badge.innerText = project.status;
+
+        document.getElementById('rev-prj-tech').innerText = project.techStack || "Not specified";
+        document.getElementById('rev-prj-abstract').innerText = project.abstract || "No abstract provided for this proposal.";
+
+        const downloadBtn = document.getElementById('rev-btn-download');
+        if (project.proposalFilePath) {
+            downloadBtn.style.display = "block";
+            downloadBtn.onclick = () => window.open(`http://localhost:5037/${project.proposalFilePath}`, '_blank');
+        } else {
+            downloadBtn.style.display = "none";
+        }
+
+        document.getElementById('reviewModal').style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    function openAssignModal(projectId) {
+        currentAssigningProjectId = projectId;
+        const project = allProjects.find(p => p.projectId === projectId);
+        if (!project) return;
+
+        document.getElementById('assign-success-overlay').style.display = 'none';
+
+        document.getElementById('ass-prj-id').innerText = `#PRJ-${project.projectId}`;
+        document.getElementById('ass-prj-title').innerText = project.title;
+        document.getElementById('ass-prj-student').innerText = project.studentName;
+        document.getElementById('ass-prj-current-sup').innerText = project.supervisorName || "Unassigned";
+
+        const selectBox = document.getElementById('ass-select-sup');
+        selectBox.innerHTML = '<option value="" disabled selected>Select a supervisor...</option>';
+        
+        allSupervisors.forEach(sup => {
+            const opt = document.createElement("option");
+            opt.value = sup.id; 
+            opt.innerText = sup.name;
+            
+            if (project.supervisorName === sup.name) {
+                opt.selected = true;
+            }
+            selectBox.appendChild(opt);
+        });
+
+        document.getElementById('assignModal').style.display = 'flex';
+    }
+
+    async function saveAssignment() {
+        const selectedSupId = document.getElementById('ass-select-sup').value;
+        if (!selectedSupId) {
+            alert("Please select a supervisor first.");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:5037/api/ModuleLeader/assign", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ 
+                    projectId: currentAssigningProjectId, 
+                    supervisorId: parseInt(selectedSupId) 
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to save assignment on the server.");
+            }
+
+            const overlay = document.getElementById('assign-success-overlay');
+            overlay.style.display = 'flex';
+
+            setTimeout(async () => {
+                closeModal('assignModal');
+                
+                await loadDashboardData();
+            }, 1500);
+
+        } catch (error) {
+            console.error(error);
+            alert("An error occurred while assigning the supervisor. Check the console.");
+        }
+    }
+        const overlay = document.getElementById('assign-success-overlay');
+        overlay.style.display = 'flex';
+
+        
+        setTimeout(() => {
+            closeModal('assignModal');
+            
+        }, 1500);
+
+    
+
+    function promptBreakMatch(projectId) {
+        currentBreakingProjectId = projectId;
+        document.getElementById('breakMatchModal').style.display = 'flex';
+    }
+
+    async function executeBreakMatch() {
+        try {
+            const response = await fetch("http://localhost:5037/api/ModuleLeader/break-match", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ projectId: currentBreakingProjectId })
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to break match on the server.");
+            }
+
+            closeModal('breakMatchModal');
+            
+            await loadDashboardData();
+
+        } catch (error) {
+            console.error(error);
+            alert("An error occurred while breaking the match. Check the console.");
+        }
+    }
 </script>
 
 </body>
