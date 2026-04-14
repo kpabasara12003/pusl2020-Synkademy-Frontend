@@ -6,6 +6,20 @@
   <title>Dashboard - Synkademy</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  
+  <style>
+    /* Custom Palette Overrides */
+    :root {
+      --sys-bg: #F9FBF9;
+      --sys-text: #1B1B1B;
+      --sys-green-dark: #157F1F;
+      --sys-green-light: #4CB963;
+      --sys-gold: #FBC02D;
+      --sys-purple: #47479D;
+      --sys-navy: #313B58;
+    }
+  </style>
 </head>
 <body>
   <div class="sv-app-layout">
@@ -13,32 +27,37 @@
     
     <main class="sv-main-area">
       <header class="sv-header">
-        <h1 class="sv-page-title">Dashboard Overview</h1>
+        <div>
+            <h1 class="sv-page-title">Dashboard Overview</h1>
+            <p style="color: var(--sys-purple); font-size: 0.9rem; margin-top: 4px;">High-level analytics of your project matches.</p>
+        </div>
         <div class="sv-user-block">
-          <span class="sv-role-tag">Supervisor</span>
+          <span class="sv-role-tag" style="background: var(--sys-gold);">Supervisor</span>
           <span id="userName">Loading...</span>
         </div>
       </header>
 
-      <section id="dashboard-content">
-        <div class="sv-card-grid">
-          <div class="sv-stat-card">
-            <h3>Interested</h3>
-            <p class="num" id="stat-int">0</p>
-          </div>
-          <div class="sv-stat-card">
-            <h3>Assigned</h3>
-            <p class="num" id="stat-assign">0</p>
-          </div>
+      <section class="sv-card-grid">
+        <div class="sv-stat-card" style="border-color: var(--sys-green-light);">
+          <h3>Relevant Proposals</h3>
+          <p class="num" id="stat-relevant">--</p>
         </div>
-
-        
-
-        <div class="sv-panel">
-          <h3> Quick Activity Log</h3>
-          <p style="color:var(--sv-gray-600); margin-top:8px;">No recent actions yet. Start by browsing new projects.</p>
+        <div class="sv-stat-card" style="border-color: var(--sys-gold);">
+          <h3>Pending Interests</h3>
+          <p class="num" id="stat-interested">--</p>
+        </div>
+        <div class="sv-stat-card" style="border-color: var(--sys-purple);">
+          <h3>Assigned Projects</h3>
+          <p class="num" id="stat-assigned">--</p>
         </div>
       </section>
+
+      <section class="sv-panel" style="margin-top: 30px; border-top: 4px solid var(--sys-navy);">
+        <h2 style="color: var(--sys-navy); margin-bottom: 20px; font-size: 1.25rem;">Relevant Projects by Research Area</h2>
+        
+        <div id="researchAreaChart"></div>
+      </section>
+
     </main>
   </div>
 
