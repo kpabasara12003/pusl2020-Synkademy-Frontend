@@ -1,3 +1,5 @@
+const SESSION_NAME = "synkademy_supervisor_session";
+
 document.addEventListener('DOMContentLoaded', () => {
   const user = getSession();
   if (user && window.location.pathname.includes("index.html")) {
@@ -44,7 +46,9 @@ async function login(e) {
       return;
     }
 
-    setSession(SESSION_NAME, data, 1); // 1 day
+    setSession(SESSION_NAME, data, 1);
+
+    console.log("Login successful. Session data:", data); 
 
     window.location.href = "pages/dashboard.html";
 

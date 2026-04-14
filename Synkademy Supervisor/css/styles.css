@@ -4,15 +4,19 @@
 :root {
   --sv-bg-porcelain: #f9fbf9;
   --sv-text-carbon: #1b1b1b;
-  --sv-primary-green: #43b969;
+  --sv-primary-green: #4cb963;
+  --sv-dark-green: #157f1f;
   --sv-jade-green: #2bc333;
   --sv-amber-gold: #fbc02d;
-  --sv-jasmin: #FADE93;
   --sv-blue1: #47479d;
-  --sv-white: #f9f9f9;
   --sv-radius: 10px;
   --sv-shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
   --sv-shadow-md: 0 6px 12px rgba(0,0,0,0.08);
+  --sv-deep-blue: #313b58;
+  --sv-white: #f9fbf9;
+  --sv-gray-600: #4b5563;
+  --sv-shadow-sm: 0 4px 12px rgba(0,0,0,0.06);
+  --sv-shadow-md: 0 8px 24px rgba(0,0,0,0.10);
 }
 
 * {

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Details - Synkademy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .detail-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .project-hero {
+      background: var(--sv-white);
+      border-radius: var(--sv-radius);
+      padding: 32px;
+      box-shadow: var(--sv-shadow-sm);
+      margin-bottom: 24px;
+    }
+
+    .project-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--sv-deep-blue);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .project-meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+      color: var(--sv-gray-600);
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section {
+      background: var(--sv-white);
+      border-radius: var(--sv-radius);
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--sv-shadow-sm);
+    }
+
+    .section h3 {
+      color: var(--sv-deep-blue);
+      margin-bottom: 16px;
+      font-size: 1.25rem;
+    }
+
+    .content-text {
+      line-height: 1.75;
+      color: var(--sv-text-carbon);
+      font-size: 1.02rem;
+    }
+
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .tag {
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .tag-research {
+      background: #e0f2fe;
+      color: var(--sv-purple);
+    }
+
+    .tag-tech {
+      background: #f0fdf4;
+      color: var(--sv-dark-green);
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--sv-gray-200);
+    }
+
+    .btn-detail {
+      padding: 14px 28px;
+      font-size: 1.02rem;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px;
+      color: var(--sv-gray-600);
+    }
+  </style>
+</head>
+<body>
+  <div class="sv-app-layout">
+    <div id="nav-container"></div>
+
+    <main class="sv-main-area">
+      <header class="sv-header">
+        <h1 class="sv-page-title">Project Details</h1>
+        <div class="sv-user-block">
+          <span class="sv-role-tag">Supervisor</span>
+          <span id="userName">Loading...</span>
+        </div>
+      </header>
+
+      <div class="detail-container" id="projectContainer">
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/session.js"></script>
+  <script src="../js/include.js"></script>
+  <script>
+    let currentSupervisorId = null;
+    let currentProjectId = null;
+
+    function getSupervisorId() {
+      const user = getSession();
+      if (!user) return null;
+      return user.id || user.supervisorId || null;
+    }
+
+    async function loadProject() {
+      const params = new URLSearchParams(window.location.search);
+      currentProjectId = params.get("id");
+
+      if (!currentProjectId) {
+        document.getElementById("projectContainer").innerHTML = `
+          <div class="empty-state">
+            <h2>Invalid Project</h2>
+            <p>No project ID found in URL.</p>
+          </div>`;
+        return;
+      }
+
+      const container = document.getElementById("projectContainer");
+      container.innerHTML = `
+        <div style="text-align:center; padding:80px; color:var(--sv-gray-600);">
+          Loading project details...
+        </div>`;
+
+      try {
+        const res = await fetch(`http://localhost:5037/api/blindreview/project/${currentProjectId}`);
+        
+        if (!res.ok) throw new Error("Failed to load project");
+
+        const project = await res.json();
+
+        currentSupervisorId = getSupervisorId();
+
+        let html = `
+          <div class="project-hero">
+            <h1 class="project-title">${project.title}</h1>
+            
+            <div class="project-meta-bar">
+              ${project.createdAt ? `
+                <div class="meta-item">
+                 ${new Date(project.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </div>` : ''}
+            </div>
+
+            <div class="section">
+              <h3>Description</h3>
+              <p class="content-text">${project.shortDescription || "No description available."}</p>
+            </div>
+
+            <div class="section">
+              <h3>Abstract</h3>
+              <p class="content-text">${project.abstract || "No abstract provided."}</p>
+            </div>
+
+            <div class="section">
+              <h3>Technical Details</h3>
+              <p><strong>Tech Stack:</strong> ${project.techStack || "Not specified"}</p>
+            </div>
+
+            <div class="section">
+              <h3>Research Areas</h3>
+              <div class="tags-container">
+                ${(project.researchAreas || []).map(area => 
+                  `<span class="tag tag-research">${area}</span>`
+                ).join('')}
+              </div>
+            </div>
+
+            ${project.tags && project.tags.length ? `
+            <div class="section">
+              <h3>Tags</h3>
+              <div class="tags-container">
+                ${project.tags.map(tag => 
+                  `<span class="tag tag-tech">${tag}</span>`
+                ).join('')}
+              </div>
+            </div>` : ''}
+          </div>
+
+          <div class="action-bar">
+            <button class="sv-btn sv-btn-primary btn-detail" onclick="addInterest()">
+               Mark as Interested
+            </button>
+            <button class="sv-btn btn-detail" 
+                    style="background: var(--sv-amber-gold); color: #1b1b1b;" 
+                    onclick="assignProject()">
+              Assign Project to Me
+            </button>
+            <button class="sv-btn sv-btn-outline btn-detail" onclick="goBack()">Back to Pending Projects</button>
+          </div>`;
+
+        container.innerHTML = html;
+
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<div class="empty-state">
+            <h2>Failed to Load Project</h2>
+            <p>Could not retrieve project details. Please try again later.</p>
+            <button class="sv-btn sv-btn-outline" onclick="goBack()" style="margin-top:20px;">
+              Back to Pending Projects
+            </button>
+          </div>`;
+      }
+    }
+
+    // Add to Interested
+    async function addInterest() {
+      if (!currentSupervisorId || !currentProjectId) {
+        alert("Session or project information missing.");
+        return;
+      }
+
+      try {
+        await fetch(`http://localhost:5037/api/blindreview/${currentSupervisorId}/interest/${currentProjectId}`, {
+          method: "POST"
+        });
+        alert(" Project added to your Interested list successfully!");
+      } catch (err) {
+        alert("Failed to add to interested list.");
+      }
+    }
+
+    // Assign Project
+    async function assignProject() {
+      if (!currentSupervisorId || !currentProjectId) {
+        alert("Session or project information missing.");
+        return;
+      }
+
+      if (!confirm("Are you sure you want to assign this project to yourself?")) return;
+
+      try {
+        const res = await fetch(`http://localhost:5037/api/blindreview/${currentSupervisorId}/assign/${currentProjectId}`, {
+          method: "POST"
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          alert(result.message || "Project assigned successfully!");
+          window.location.href = "pending.html";
+        } else {
+          alert(result.message || "Failed to assign project.");
+        }
+      } catch (err) {
+        alert("Network error while assigning the project.");
+      }
+    }
+
+    function goBack() {
+      window.location.href = "pending.html";
+    }
+
+    
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = requireAuth();
+      if (!user) return;
+
+      document.getElementById("userName").textContent = user.fullName || "Supervisor";
+
+      loadProject();
+    });
+  </script>
+</body>
+</html>

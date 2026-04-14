@@ -10,6 +10,7 @@ function getSession(name = SESSION_NAME) {
       try {
         return JSON.parse(decodeURIComponent(c.substring(cname.length)));
       } catch (e) {
+        console.error("Session parse error:", e);
         return null;
       }
     }
@@ -17,7 +18,7 @@ function getSession(name = SESSION_NAME) {
   return null;
 }
 
-function setSession(name, value, days) {
+function setSession(name = SESSION_NAME, value, days = 1) {
   const d = new Date();
   d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
   document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))};expires=${d.toUTCString()};path=/`;
@@ -35,4 +36,10 @@ function requireAuth() {
     return null;
   }
   return user;
+}
+
+function getSupervisorId() {
+  const user = getSession();
+  if (!user) return null;
+  return user.id || user.supervisorId || null;
 }
