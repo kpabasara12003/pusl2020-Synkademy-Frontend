@@ -259,11 +259,7 @@
               <button class="sv-btn sv-btn-outline btn-action" onclick="addInterest(${project.id})">
                 Mark as Interested
               </button>
-              <button class="sv-btn btn-action" 
-                      style="background: var(--sv-amber-gold); color: #1b1b1b;" 
-                      onclick="assignProject(${project.id})">
-                Assign to Me
-              </button>
+        
             </div>
           `;
 
@@ -298,32 +294,6 @@
         loadProjects();
       } catch (err) {
         alert("Failed to add to interested list.");
-      }
-    };
-
-    window.assignProject = async function(projectId) {
-      if (!confirm("Are you sure you want to assign this project to yourself?")) return;
-
-      if (!currentSupervisorId) {
-        alert("Session error.");
-        return;
-      }
-
-      try {
-        const res = await fetch(`http://localhost:5037/api/blindreview/${currentSupervisorId}/assign/${projectId}`, {
-          method: "POST"
-        });
-
-        const result = await res.json();
-
-        if (res.ok) {
-          alert(result.message || "Project assigned successfully!");
-          loadProjects();
-        } else {
-          alert(result.message || "Failed to assign project.");
-        }
-      } catch (err) {
-        alert("Network error while assigning the project.");
       }
     };
 

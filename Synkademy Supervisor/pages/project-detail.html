@@ -218,11 +218,7 @@
             <button class="sv-btn sv-btn-primary btn-detail" onclick="addInterest()">
                Mark as Interested
             </button>
-            <button class="sv-btn btn-detail" 
-                    style="background: var(--sv-amber-gold); color: #1b1b1b;" 
-                    onclick="assignProject()">
-              Assign Project to Me
-            </button>
+           
             <button class="sv-btn sv-btn-outline btn-detail" onclick="goBack()">Back to Pending Projects</button>
           </div>`;
 
@@ -254,33 +250,6 @@
         alert(" Project added to your Interested list successfully!");
       } catch (err) {
         alert("Failed to add to interested list.");
-      }
-    }
-
-    // Assign Project
-    async function assignProject() {
-      if (!currentSupervisorId || !currentProjectId) {
-        alert("Session or project information missing.");
-        return;
-      }
-
-      if (!confirm("Are you sure you want to assign this project to yourself?")) return;
-
-      try {
-        const res = await fetch(`http://localhost:5037/api/blindreview/${currentSupervisorId}/assign/${currentProjectId}`, {
-          method: "POST"
-        });
-
-        const result = await res.json();
-
-        if (res.ok) {
-          alert(result.message || "Project assigned successfully!");
-          window.location.href = "pending.html";
-        } else {
-          alert(result.message || "Failed to assign project.");
-        }
-      } catch (err) {
-        alert("Network error while assigning the project.");
       }
     }
 
