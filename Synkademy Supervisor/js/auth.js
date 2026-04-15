@@ -1,5 +1,3 @@
-const SESSION_NAME = "synkademy_supervisor_session";
-
 document.addEventListener('DOMContentLoaded', () => {
   const user = getSession();
   if (user && window.location.pathname.includes("index.html")) {
