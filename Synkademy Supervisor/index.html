@@ -1,77 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Synkademy Supervisor</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synkademy • Supervisor Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F9FBF9;
+      --text: #1B1B1B;
+      --amber: #FBC02D;
+      --green: #157F1F;
+      --purple: #47479D;
+      --navy: #313B58;
+      --white: #FFFFFF;
+    }
 
-<style>
-:root {
-  --green: #117F17;
-  --moss: #2BC333;
-  --gold: #fbc02d;
-  --soft: #FADE93;
-  --bg: #f9fbf9;
-  --text: #1b1b1b;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif}
+    body {
+      height: 100vh;
+      background: white;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
 
-body{
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--bg);
-  color:var(--text);
-}
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
 
+    .login-box {
+      width: 420px;
+      background: var(--white);
+      border: 3px solid var(--navy);
+      border-radius: 24px;
+      padding: 50px 40px;
+      position: relative;
+      z-index: 2;
+    }
 
-</style>
+    .logo {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -3px;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--purple);
+      font-weight: 600;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+    }
+
+    .form-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--navy);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .form-subtitle {
+      text-align: center;
+      color:var(--text);
+      margin-bottom: 35px;
+      font-size: 1rem;
+    }
+
+    .input-wrapper {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .input-wrapper label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid var(--navy);
+      border-radius: 12px;
+      font-size: 1.05rem;
+      background: var(--white);
+      transition: all 0.3s ease;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+
+    .toggle-btn {
+      position: absolute;
+      right: 18px;
+      top: 50px;
+      background: none;
+      border: none;
+      color: var(--green);
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 17px;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .login-button:hover {
+      background: var(--amber);
+      color: var(--navy);
+      transform: translateY(-3px);
+    }
+
+    .error-msg {
+      color: #c62828;
+      text-align: center;
+      margin-top: 18px;
+      font-size: 0.95rem;
+      min-height: 26px;
+    }
+
+    .bottom-text {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .highlight {
+      color: var(--amber);
+      font-weight: 700;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>Synkademy</h1>
-  <h3>Supervisor Login</h3>
+  <div class="login-box">
 
-  <form id="loginForm">
-
-    <div class="input-group">
-      <input type="email" id="email" placeholder="Email" required>
-      <img src="https://img.icons8.com/ios-filled/100/user.png">
+    <div class="logo">
+      Synkademy
     </div>
+    <div class="subtitle">SUPERVISOR PORTAL</div>
 
-    <div class="input-group">
-      <input type="password" id="password" placeholder="Password" required>
-      <span class="toggle" id="toggleText" onclick="togglePass()">Show</span>
-      <img src="https://img.icons8.com/ios-filled/100/lock.png">
+    <div class="form-title">Welcome Back</div>
+    <div class="form-subtitle">Sign in to guide for research projects</div>
+
+    <form id="loginForm">
+      <div class="input-wrapper">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" class="input-field" placeholder="Enter your email" required>
+      </div>
+
+      <div class="input-wrapper">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="input-field" placeholder="Enter your password" required>
+        <button type="button" class="toggle-btn" id="toggleBtn">SHOW</button>
+      </div>
+
+      <button type="submit" class="login-button" id="loginBtn">LOGIN</button>
+
+      <div class="error-msg" id="errorMsg"></div>
+    </form>
+
+    <div class="bottom-text">
+      Need help? Contact the <span class="highlight">Module leader</span>
     </div>
+  </div>
 
-    <button class="btn" type="submit" id="loginBtn">Login</button>
-    <div class="error" id="errorMsg"></div>
-
-  </form>
-</div>
-
-<script src="js/session.js"></script>
+  <script src="js/session.js"></script>
   <script src="js/auth.js"></script>
-  <script>
-    document.getElementById("loginForm").addEventListener("submit", login);
+ <script>
+    document.addEventListener("DOMContentLoaded", () => {
 
-    function togglePass() {
-      const p = document.getElementById("password");
-      const t = document.getElementById("toggleText");
-      if (p.type === "password") {
-        p.type = "text";
-        t.innerText = "Hide";
-      } else {
-        p.type = "password";
-        t.innerText = "Show";
+      const loginForm = document.getElementById("loginForm");
+      if (loginForm) {
+        loginForm.addEventListener("submit", login);
       }
-    }
+
+      const toggleBtn = document.getElementById("toggleBtn");
+      const passwordField = document.getElementById("password");
+
+      if (toggleBtn && passwordField) {
+        toggleBtn.addEventListener("click", () => {
+          if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleBtn.textContent = "HIDE";
+          } else {
+            passwordField.type = "password";
+            toggleBtn.textContent = "SHOW";
+          }
+        });
+      }
+      const emailField = document.getElementById("email");
+      if (emailField) {
+        emailField.focus();
+      }
+
+    });
   </script>
 
 </body>
 </html>
-
