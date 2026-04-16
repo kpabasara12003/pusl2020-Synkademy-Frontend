@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synkademy | Research Areas</title>
+    <link rel="stylesheet" href="users_styles.css"> 
+</head>
+<div id="global-loader">
+        <div class="spinner"></div>
+    </div>
+<body>
+
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-logo">S</div>
+                <span class="brand-name">Synkademy</span>
+            </div>
+            
+            <nav class="main-nav">
+                <a href="./dashboard.html" class="nav-item">Dashboard</a>
+                <a href="./users.html" class="nav-item">User Management</a>
+                <a href="./metadata.html" class="nav-item active">Meta Data</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-details">
+                    <span id="name" class="user-name">Loading...</span>
+                    <span class="user-role">Module Leader</span>
+                </div>
+                <button class="btn-outline" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="workspace">
+
+        <div class="page-header">
+            <div>
+                <h1>System Metadata</h1>
+                <p class="text-muted">Manage Research Areas and Project Tags for the matching algorithm.</p>
+            </div>
+        </div>
+
+        <div class="panel-tabs">
+            <button class="tab-btn active" onclick="switchTab('create')">Create New</button>
+            <button class="tab-btn" onclick="switchTab('manage')">Manage Existing</button>
+        </div>
+
+        <section id="create-tab" class="data-panel">
+            <div class="panel-header">
+                <h2>Add Metadata</h2>
+            </div>
+            <div style="padding: 1.5rem; max-width: 600px;">
+                <form id="createMetaForm" onsubmit="handleCreation(event)">
+                    
+                    <div class="form-group">
+                        <label>Category Type</label>
+                        <select id="metaType" class="filter-dropdown" style="width: 100%; margin-top: 0.5rem;">
+                            <option value="tag">Project Tags</option>
+                            <option value="researchArea">Research Areas</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label>Name</label>
+                        <input type="text" id="metaName" class="search-input" style="width: 100%; margin-top: 0.5rem;" placeholder="Enter name here..." required>
+                    </div>
+
+                    <div style="margin-top: 2rem; display: flex; align-items: center;">
+                        <button type="submit" class="btn-primary" id="submitBtn">Save to Database</button>
+                        <span id="create-message" style="margin-left: 1rem; font-weight: 500; font-size: 0.9rem;"></span>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="manage-tab" class="data-panel" style="display: none;">
+            <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Metadata Directory</h2>
+                <select id="viewFilter" class="filter-dropdown" onchange="renderTable()">
+                    <option value="tags">View Project Tags</option>
+                    <option value="researchAreas">View Research Areas</option>
+                </select>
+            </div>
+            
+            <div class="table-responsive" style="padding: 1rem;">
+                <table class="table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border-color);">
+                            <th style="padding: 1rem; color: var(--text-secondary); width: 10%;">ID</th>
+                            <th style="padding: 1rem; color: var(--text-secondary); width: 60%;">Name</th>
+                            <th style="padding: 1rem; color: var(--text-secondary); text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="metaTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+    
+    </main>
+
+    <script>
+    const SESSION_NAME = "synkademy_moduleleader_session";
+    const user = getSession(SESSION_NAME);
+
+    if (!user) {
+        window.location.href = "index.html"; 
+    } else {
+        document.getElementById("name").innerText = user.fullName || "Module Leader";
+    }
+
+    function logout() {
+        document.cookie = SESSION_NAME + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.href = "index.html"; 
+    }
+
+    function getSession(name) {
+        const cname = name + "=";
+        const cookies = decodeURIComponent(document.cookie).split(";");
+        for (let c of cookies) {
+            c = c.trim();
+            if (c.indexOf(cname) === 0) {
+                return JSON.parse(c.substring(cname.length));
+            }
+        }
+        return null;
+    }
+
+    function showLoader() {
+        document.getElementById('global-loader').style.display = 'flex';
+    }
+
+    function hideLoader() {
+        document.getElementById('global-loader').style.display = 'none';
+    }
+
+    function switchTab(tabName) {
+        const createTab = document.getElementById('create-tab');
+        const manageTab = document.getElementById('manage-tab');
+        const buttons = document.querySelectorAll('.tab-btn');
+
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        if (tabName === 'create') {
+            createTab.style.display = 'block';
+            manageTab.style.display = 'none';
+            buttons[0].classList.add('active');
+        } else {
+            createTab.style.display = 'none';
+            manageTab.style.display = 'block';
+            buttons[1].classList.add('active');
+            renderTable(); 
+        }
+    }
+
+    let dbTags = [];
+    let dbResearchAreas = [];
+
+    async function loadMetadata() {
+        showLoader();
+        try {
+            const tagRes = await fetch("http://localhost:5037/api/Metadata/tags");
+            if (tagRes.ok) dbTags = await tagRes.json();
+
+            const areaRes = await fetch("http://localhost:5037/api/Metadata/researchareas");
+            if (areaRes.ok) dbResearchAreas = await areaRes.json();
+
+            renderTable(); 
+        } catch (error) {
+            console.error("Failed to load metadata:", error);
+        } finally {
+            hideLoader();
+        }
+    }
+
+    async function handleCreation(event) {
+        event.preventDefault();
+        
+        const type = document.getElementById('metaType').value;
+        const nameInput = document.getElementById('metaName').value;
+        const msgSpan = document.getElementById('create-message');
+        const btn = document.getElementById('submitBtn');
+
+        btn.innerText = "Saving...";
+        
+        const endpoint = type === 'tag' 
+            ? "http://localhost:5037/api/Metadata/tags" 
+            : "http://localhost:5037/api/Metadata/researchareas";
+
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: nameInput })
+            });
+
+            if (response.ok) {
+                msgSpan.style.color = "var(--status-success)";
+                msgSpan.innerText = "✓ Saved successfully!";
+                document.getElementById('createMetaForm').reset();
+                
+                await loadMetadata();
+            } else {
+                const errorText = await response.text();
+                msgSpan.style.color = "#DC2626";
+                msgSpan.innerText = errorText || "Failed to save.";
+            }
+        } catch (error) {
+            msgSpan.style.color = "#DC2626";
+            msgSpan.innerText = "Network error.";
+        } finally {
+            btn.innerText = "Save to Database";
+            setTimeout(() => { msgSpan.innerText = ""; }, 3000);
+        }
+    }
+
+    function renderTable() {
+        const viewType = document.getElementById('viewFilter').value;
+        const tbody = document.getElementById('metaTableBody');
+        tbody.innerHTML = '';
+
+        const dataToRender = viewType === 'tags' ? dbTags : dbResearchAreas;
+
+        if (dataToRender.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--text-secondary);">No records found.</td></tr>`;
+            return;
+        }
+
+        dataToRender.sort((a, b) => b.id - a.id);
+        dataToRender.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = "1px solid var(--border-color)";
+            tr.innerHTML = `
+                <td style="padding: 1rem; color: var(--text-secondary);">${item.id}</td>
+                <td style="padding: 1rem; font-weight: 500; color: var(--brand-primary);">${item.name}</td>
+                <td style="padding: 1rem; text-align: right;">
+                    <button class="btn-text" style="color: #DC2626;" onclick="deleteItem(${item.id}, '${viewType}')">Delete</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    async function deleteItem(id, type) {
+        const isConfirmed = confirm(`Are you sure you want to delete this ${type === 'tags' ? 'Tag' : 'Research Area'}?`);
+        if (!isConfirmed) return;
+
+        const endpoint = type === 'tags' 
+            ? `http://localhost:5037/api/Metadata/tags/${id}` 
+            : `http://localhost:5037/api/Metadata/researchareas/${id}`;
+
+        try {
+            const response = await fetch(endpoint, { method: "DELETE" });
+
+            if (response.ok) {
+                await loadMetadata(); 
+            } else {
+                const errorText = await response.text();
+                alert("Error: " + errorText);
+            }
+        } catch (error) {
+            alert("Failed to communicate with server.");
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadMetadata();
+    });
+
+</script>
+</body>
+</html>
