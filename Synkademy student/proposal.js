@@ -172,7 +172,6 @@ function renderProposal(project) {
     document.getElementById("proposalShort").innerText = project.shortDescription || "-";
     document.getElementById("proposalAbstract").innerText = project.abstract || "-";
     document.getElementById("proposalTech").innerText = asText(project.techStack);
-    document.getElementById("proposalFile").innerText = asText(project.proposalFilePath);
     document.getElementById("proposalStatus").innerText = project.status || "Pending";
     document.getElementById("proposalBadge").innerText = project.status || "Proposal";
     
