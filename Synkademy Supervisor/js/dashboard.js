@@ -24,57 +24,60 @@ async function loadDashboardData() {
                 You haven't selected any research areas yet.<br>
                 Please update your Expertise to see analytics.
             </div>`;
-        return;
-    }
-
-    const areaCounts = {};
-    supervisorAreas.forEach(area => {
-        areaCounts[area.name] = 0; 
-    });
-
-    const projRes = await fetch(`${BASE_URL}/BlindReview/${currentSupervisorId}/projects`);
-    if (!projRes.ok) throw new Error("Failed to load project data");
-    const projects = await projRes.json();
-    
-    document.getElementById("stat-relevant").textContent = projects.length;
-
-    projects.forEach(project => {
-        project.researchAreas.forEach(area => {
-            if (areaCounts.hasOwnProperty(area)) {
-                areaCounts[area] += 1;
-            }
+    } else {
+        const areaCounts = {};
+        supervisorAreas.forEach(area => {
+            areaCounts[area.name] = 0; 
         });
-    });
 
-    const chartCategories = Object.keys(areaCounts);
-    const chartData = Object.values(areaCounts);
+        const projRes = await fetch(`${BASE_URL}/BlindReview/${currentSupervisorId}/projects`);
+        if (projRes.ok) {
+            const projects = await projRes.json();
+            
+            projects.forEach(project => {
+                project.researchAreas.forEach(area => {
+                    if (areaCounts.hasOwnProperty(area)) {
+                        areaCounts[area] += 1;
+                    }
+                });
+            });
 
-    renderChart(chartCategories, chartData);
+            const chartCategories = Object.keys(areaCounts);
+            const chartData = Object.values(areaCounts);
 
-    try {
-        const intRes = await fetch(`${BASE_URL}/BlindReview/${currentSupervisorId}/interests`);
-        if (intRes.ok) {
-            const interests = await intRes.json();
-            document.getElementById("stat-interested").textContent = interests.length;
+            renderChart(chartCategories, chartData);
         }
-    } catch(err) {
-        console.error("Could not load interests for stats", err);
     }
 
     try {
-        const assignRes = await fetch(`${BASE_URL}/BlindReview/${currentSupervisorId}/assigned`);
-        if (assignRes.ok) {
-            const assigned = await assignRes.json();
-            document.getElementById("stat-assigned").textContent = assigned.length;
+        const [relRes, intRes, assRes] = await Promise.all([
+            fetch(`${BASE_URL}/Dashboard/${currentSupervisorId}/relevant-count`),
+            fetch(`${BASE_URL}/Dashboard/${currentSupervisorId}/interests-count`),
+            fetch(`${BASE_URL}/Dashboard/${currentSupervisorId}/assigned-count`)
+        ]);
+
+        if (relRes.ok) {
+            const relCount = await relRes.json();
+            document.getElementById("stat-relevant").textContent = relCount;
+        }
+        
+        if (intRes.ok) {
+            const intCount = await intRes.json();
+            document.getElementById("stat-interested").textContent = intCount;
+        }
+        
+        if (assRes.ok) {
+            const assCount = await assRes.json();
+            document.getElementById("stat-assigned").textContent = assCount;
         }
     } catch(err) {
-        console.error("Could not load assigned for stats", err);
+        console.error("Could not load KPI counts from DashboardController", err);
     }
 
   } catch (err) {
     console.error("Dashboard error:", err);
     document.getElementById("researchAreaChart").innerHTML = `
-      <p style="color: red; text-align: center;">Unable to load chart data. Ensure the backend is running.</p>
+      <p style="color: red; text-align: center;">Unable to load dashboard data. Ensure the backend is running.</p>
     `;
   }
 }
@@ -113,7 +116,7 @@ function renderChart(categories, data) {
             },
             tickAmount: maxDataValue < 5 ? maxDataValue : 5 
         },
-        colors: ['#4CB963'], // --sys-green-light
+        colors: ['#4CB963'], 
         grid: {
             borderColor: '#e2e8f0',
             strokeDashArray: 4,
