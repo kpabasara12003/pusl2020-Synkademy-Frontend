@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Synkademy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  
+  <style>
+    /* Custom Palette Overrides */
+    :root {
+      --sys-bg: #F9FBF9;
+      --sys-text: #1B1B1B;
+      --sys-green-dark: #157F1F;
+      --sys-green-light: #4CB963;
+      --sys-gold: #FBC02D;
+      --sys-purple: #47479D;
+      --sys-navy: #313B58;
+    }
+  </style>
+</head>
+<body>
+  <div class="sv-app-layout">
+    <div id="nav-container"></div>
+    
+    <main class="sv-main-area">
+      <header class="sv-header">
+        <div>
+            <h1 class="sv-page-title">Dashboard Overview</h1>
+            <p style="color: var(--sys-purple); font-size: 0.9rem; margin-top: 4px;">High-level analytics of your project matches.</p>
+        </div>
+        <div class="sv-user-block">
+          <span class="sv-role-tag" style="background: var(--sys-gold);">Supervisor</span>
+          <span id="userName">Loading...</span>
+        </div>
+      </header>
+
+      <section class="sv-card-grid">
+        <div class="sv-stat-card" style="border-color: var(--sys-green-light);">
+          <h3>Relevant Proposals</h3>
+          <p class="num" id="stat-relevant">--</p>
+        </div>
+        <div class="sv-stat-card" style="border-color: var(--sys-gold);">
+          <h3>Pending Interests</h3>
+          <p class="num" id="stat-interested">--</p>
+        </div>
+        <div class="sv-stat-card" style="border-color: var(--sys-purple);">
+          <h3>Assigned Projects</h3>
+          <p class="num" id="stat-assigned">--</p>
+        </div>
+      </section>
+
+      <section class="sv-panel" style="margin-top: 30px; border-top: 4px solid var(--sys-navy);">
+        <h2 style="color: var(--sys-navy); margin-bottom: 20px; font-size: 1.25rem;">Relevant Projects by Research Area</h2>
+        
+        <div id="researchAreaChart"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../js/session.js"></script>
+  <script src="../js/include.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

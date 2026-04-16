@@ -3,206 +3,674 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Details</title>
-  <link rel="stylesheet" href="project_d.css">
+  <title>Proposal Details | Synkademy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #157F1F;
+      --jade: #4CB963;
+      --gold: #FBC02D;
+      --bg: #F9FBF9;
+      --text: #1B1B1B;
+      --card: #FFFFFF;
+      --muted: #47479D;
+      --border: #E6ECE6;
+      --shadow: 0 18px 45px rgba(21, 127, 31, 0.06);
+      --sidebar: #313B58;
+      --sidebar-text: #F9FBF9;
+      --sidebar-muted: rgba(249, 251, 249, 0.72);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Manrope', sans-serif;
+      color: inherit;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: -1;
+      border-radius: 50%;
+      opacity: 0.65;
+    }
+
+    body::before {
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(251, 192, 45, 0.35), transparent 70%);
+      top: -120px;
+      right: -120px;
+    }
+
+    body::after {
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(43, 195, 51, 0.25), transparent 70%);
+      bottom: -160px;
+      left: -160px;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, #313B58 0%, #2D3650 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 28px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, var(--green), var(--jade));
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .brand h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      line-height: 1.1;
+      color: var(--sidebar-text);
+    }
+
+    .profile {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 18px;
+      padding: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .profile h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--sidebar-text);
+    }
+
+    .profile span {
+      font-size: 13px;
+      color: var(--sidebar-muted);
+    }
+
+    .nav {
+      display: grid;
+      gap: 12px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      padding: 12px 14px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: 14px;
+      border: 1px solid transparent;
+      transition: 0.25s ease;
+      color: var(--sidebar-text);
+    }
+
+    .nav a.active {
+      background: rgba(76, 185, 99, 0.2);
+      border-color: rgba(76, 185, 99, 0.28);
+      color: #ffffff;
+    }
+
+    .nav a:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .nav span {
+      font-size: 12px;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--sidebar-text);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .sidebar-footer strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #ffffff;
+    }
+
+    .logout-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-top: 12px;
+      background: var(--gold);
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(251, 192, 45, 0.18);
+    }
+
+    .main {
+      padding: 28px 34px 40px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .title h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 32px;
+      margin-bottom: 6px;
+    }
+
+    .title p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .page-status {
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: #555;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+    }
+
+    .page-status.loading {
+      border-color: rgba(71, 71, 157, 0.18);
+      background: rgba(71, 71, 157, 0.06);
+      color: var(--muted);
+    }
+
+    .page-status.success {
+      border-color: rgba(21, 127, 31, 0.18);
+      background: rgba(21, 127, 31, 0.06);
+      color: var(--green);
+    }
+
+    .page-status.error {
+      border-color: rgba(229, 57, 53, 0.22);
+      background: rgba(229, 57, 53, 0.06);
+      color: #b00020;
+    }
+
+    .raw-box {
+      width: 100%;
+      min-height: 120px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #fbfbfb;
+      color: #222;
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow: auto;
+    }
+
+    .pill {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      border-left: 6px solid var(--jade);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(76, 185, 99, 0.12);
+    }
+
+    .hero-badge {
+      background: rgba(76, 185, 99, 0.14);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 32px;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .hero-meta {
+      text-align: right;
+      padding: 18px 22px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      min-width: 180px;
+    }
+
+    .hero-meta span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .hero-meta strong {
+      color: var(--green);
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 18px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    }
+
+    .section-title h3 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(251, 192, 45, 0.15);
+    }
+
+    .detail-text {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #444;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .field-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #555;
+    }
+
+    .field-value {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #F9FBF9;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(76, 185, 99, 0.12);
+      border: 1px solid rgba(76, 185, 99, 0.18);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .meta-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .meta-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .meta-key {
+      font-size: 13px;
+      color: #666;
+      font-weight: 600;
+      min-width: 120px;
+    }
+
+    .meta-val {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(21, 127, 31, 0.12);
+      color: var(--green);
+      font-weight: 700;
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .empty {
+      padding: 18px;
+      border-radius: 12px;
+      background: #fdfdfd;
+      border: 1px dashed var(--border);
+      color: #666;
+      font-size: 14px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .loading {
+      color: #666;
+      font-size: 14px;
+      padding: 10px 0;
+    }
+
+    .error {
+      color: #b00020;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .main {
+        padding: 20px 16px 28px;
+      }
+
+      .hero,
+      .grid,
+      .topbar {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .hero-meta {
+        min-width: 0;
+        text-align: left;
+      }
+    }
+  </style>
 </head>
 <body>
-
-<div class="page">
-  <nav class="nav">
-    <div class="logo">SY</div>
-
-    <div class="nav-links">
-      <a href="dashboard.html" class="btn">Dashboard</a>
-      <a href="proposals.html" class="btn">Proposals</a>
-      <a href="#" class="btn">Supervisor Match</a>
-      <a href="#" class="btn">Milestones</a>
-      <a href="#" class="btn">Messages</a>
-      <a href="#" class="btn">Settings</a>
-    </div>
-  </nav>
-</div>
-
-<div class="container">
-
-  <div class="hero">
-    <div class="hero-text">
-      <div class="hero-badge">Academic Project</div>
-      <h1>AI Chatbot System</h1>
-      <p>Project Details Overview — 2025</p>
-    </div>
-    <div class="hero-id">
-      <span>Project ID</span>
-      <strong>PAS-001</strong>
-    </div>
-  </div>
-
-  <div class="grid">
-
-    <div class="left">
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon gold"></div>
-          <h3>Overview</h3>
-        </div>
-        <p class="overview-text">
-          This project develops an AI-powered chatbot using Natural Language Processing
-          to assist students with academic queries and automate institutional responses efficiently.
-        </p>
-        <div class="highlight-bar">
-          Designed to reduce student support response time by up to 60%
-        </div>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <div>
+        <h1>Synkademy</h1>
+        <span style="font-size:12px;color:var(--muted);">Student Dashboard</span>
       </div>
+    </div>
 
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon mint"></div>
-          <h3>Objectives</h3>
-        </div>
-        <ul class="obj-list">
-          <li>Build and train an NLP classification model</li>
-          <li>Integrate with FastAPI backend and REST endpoints</li>
-          <li>Evaluate performance using benchmark datasets</li>
-        </ul>
+    <div class="profile">
+      <h2 id="profileName">Hi, Student</h2>
+      <span id="profileStudentNo">Student Number: -</span>
+    </div>
+
+    <nav class="nav">
+      <a href="dashboard.html">Overview <span>Today</span></a>
+      <a class="active" href="proposal.html">Proposal <span>1</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <strong id="sidebarFooterTitle">Blind Match Mode</strong>
+      <span id="sidebarFooterText">Supervisor details stay hidden until the proposal is matched.</span>
+      <button class="logout-btn" type="button" onclick="logout()">Log Out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="title">
+        <h2>Proposal Details</h2>
+        <p>Loaded from the live project API for the current student.</p>
       </div>
+      <a class="pill" href="dashboard.html">Back to Dashboard</a>
+    </div>
 
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon green"></div>
-          <h3>Technology Stack</h3>
-        </div>
-        <div class="tags">
-          <span class="tag py">Python</span>
-          <span class="tag api">FastAPI</span>
-          <span class="tag react">React</span>
-          <span class="tag gpt">GPT</span>
-        </div>
+    <div id="pageStatus" class="page-status loading">Loading proposal and supervisor details...</div>
+
+    <section class="panel hero">
+      <div>
+        <div class="hero-badge" id="proposalBadge">Proposal</div>
+        <h1 id="proposalTitle">Loading proposal...</h1>
+        <p id="proposalSubtitle">Fetching your project details.</p>
       </div>
+      <div class="hero-meta">
+        <span>Project ID</span>
+        <strong id="proposalId">-</strong>
+      </div>
+    </section>
 
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon mint"></div>
-          <h3>Team Members</h3>
+    <section class="grid">
+      <div>
+        <div class="panel">
+          <div class="section-title">
+            <div class="section-icon"></div>
+            <h3>Overview</h3>
+          </div>
+          <div class="field">
+            <div class="field-label">Short Description</div>
+            <div class="field-value" id="proposalShort">Loading...</div>
+          </div>
+          <div class="field">
+            <div class="field-label">Abstract</div>
+            <div class="field-value" id="proposalAbstract">Loading...</div>
+          </div>
         </div>
-        <div class="team-list">
 
-          <div class="team-row">
-            <div class="avatar av1">SY</div>
-            <div class="team-info">
-              <div class="team-name">S. Yusuf</div>
-              <div class="team-role">Project Lead</div>
+        <div class="panel">
+          <div class="section-title">
+            <div class="section-icon" style="background:rgba(76,185,99,0.15);"></div>
+            <h3>Research Areas & Tags</h3>
+          </div>
+          <div class="field">
+            <div class="field-label">Research Areas</div>
+            <div class="chips" id="proposalResearchAreas">
+              <div class="loading">Loading...</div>
             </div>
-            <span class="team-badge tb-lead">Lead</span>
           </div>
-
-          <div class="team-row">
-            <div class="avatar av2">AM</div>
-            <div class="team-info">
-              <div class="team-name">A. Mohamed</div>
-              <div class="team-role">Backend Developer</div>
+          <div class="field">
+            <div class="field-label">Tags</div>
+            <div class="chips" id="proposalTags">
+              <div class="loading">Loading...</div>
             </div>
-            <span class="team-badge tb-dev">Dev</span>
           </div>
+        </div>
+      </div>
 
-          <div class="team-row">
-            <div class="avatar av3">RK</div>
-            <div class="team-info">
-              <div class="team-name">R. Kumar</div>
-              <div class="team-role">ML Engineer</div>
+      <div>
+        <div class="panel">
+          <div class="section-title">
+            <div class="section-icon" style="background:rgba(71,71,157,0.12);"></div>
+            <h3>Proposal Info</h3>
+          </div>
+          <div class="meta-list">
+            <div class="meta-row">
+              <div class="meta-key">Status</div>
+              <div class="meta-val"><span class="status-badge" id="proposalStatus">-</span></div>
             </div>
-            <span class="team-badge tb-ml">ML</span>
+            <div class="meta-row">
+              <div class="meta-key">Submitted</div>
+              <div class="meta-val" id="proposalCreated">-</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-key">Tech Stack</div>
+              <div class="meta-val" id="proposalTech">-</div>
+            </div>
           </div>
-
         </div>
-      </div>
 
+        <div class="panel" id="supervisorPanel">
+          <div class="section-title">
+            <div class="section-icon" style="background:rgba(76,185,99,0.15);"></div>
+            <h3>Supervisor</h3>
+          </div>
+          <div class="meta-list">
+            <div class="meta-row">
+              <div class="meta-key">Name</div>
+              <div class="meta-val" id="supervisorName">-</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-key">Email</div>
+              <div class="meta-val" id="supervisorEmail">-</div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-key">Research Areas</div>
+              <div class="meta-val" style="display:flex; justify-content:flex-end; width:100%;">
+                <div class="chips" id="supervisorResearchAreas">-</div>
+              </div>
+            </div>
+            <div class="meta-row">
+              <div class="meta-key">Supervised Projects</div>
+              <div class="meta-val" id="supervisorProjects">-</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="panel" id="proposalEmptyState" style="display:none;">
+      <div class="empty">No proposal found for this student.</div>
     </div>
+  </main>
 
-    <div class="right">
-
-      <div class="status-card">
-        <h3>Progress</h3>
-        <div class="progress-wrap">
-          <div class="progress-label">
-            <span>Completion</span>
-            <strong>40%</strong>
-          </div>
-          <div class="track">
-            <div class="fill" id="bar"></div>
-          </div>
-        </div>
-        <span class="status-badge">⏳ Pending Review</span>
-
-        <div class="phases">
-          <div class="phase done">Plan</div>
-          <div class="phase done">Build</div>
-          <div class="phase active">Review</div>
-          <div class="phase todo">Deploy</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon gold"></div>
-          <h3>Project Info</h3>
-        </div>
-
-        <div class="info-rows">
-          <div class="info-row">
-            <span class="info-label">Project ID</span>
-            <span class="info-val violet">PAS-001</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Year</span>
-            <span class="info-val navy">2025</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Duration</span>
-            <span class="info-val">12 Months</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Category</span>
-            <span class="info-val green">AI / NLP</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Status</span>
-            <span class="info-val amber">In Progress</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card supervisor-card">
-        <p class="sup-label">Supervisor</p>
-        <p class="sup-name">Dr. A. Rahman</p>
-        <p class="sup-dept">Faculty of Computing</p>
-
-        <div class="sup-stats">
-          <div class="sup-stat">
-            <div class="sup-num gold-text">3</div>
-            <div class="sup-key">Members</div>
-          </div>
-          <div class="sup-stat">
-            <div class="sup-num mint-text">12</div>
-            <div class="sup-key">Months</div>
-          </div>
-          <div class="sup-stat">
-            <div class="sup-num violet-text">4</div>
-            <div class="sup-key">Milestones</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
-<script>
-setTimeout(function () {
-  document.getElementById('bar').style.width = '40%';
-}, 300);
-</script>
-
+  <script src="auth.js"></script>
+  <script src="proposal.js"></script>
 </body>
 </html>

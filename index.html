@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synkademy - Student Hub</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F9FBF9;
+      --text: #1B1B1B;
+      --accent-yellow: #FBC02D;
+      --accent-green-dark: #157F1F;
+      --accent-green-light: #4CB963;
+      --accent-purple: #47479D;
+      --accent-slate: #313B58;
+      --surface: #FFFFFF;
+      --border: #E8EAE8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .font-heading { font-family: 'Sora', sans-serif; }
+    .font-body { font-family: 'DM Sans', sans-serif; }
+
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
+    @keyframes slideRight { from { opacity:0; transform: translateX(-40px); } to { opacity:1; transform: translateX(0); } }
+    @keyframes pulse-dot { 0%,100% { opacity:0.4; } 50% { opacity:1; } }
+    @keyframes grain { 0% { transform: translate(0,0); } 10% { transform: translate(-2%,-2%); } 30% { transform: translate(3%,1%); } 50% { transform: translate(-1%,3%); } 70% { transform: translate(2%,-1%); } 100% { transform: translate(0,0); } }
+
+    .anim-fade-up { animation: fadeUp 0.7s ease-out both; }
+    .anim-scale { animation: scaleIn 0.6s ease-out both; }
+    .anim-slide { animation: slideRight 0.6s ease-out both; }
+    .anim-float { animation: float 4s ease-in-out infinite; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+
+    .grain-overlay::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+      animation: grain 8s steps(10) infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .banner-image {
+      width: 100%;
+      height: 350px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .banner-image { height: 250px; }
+    }
+
+    .feature-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .cta-btn {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body class="font-body overflow-x-hidden" style="background-color: var(--bg); color: var(--text);">
+  <div id="app-wrapper" class="min-h-screen w-full flex flex-col">
+    <nav class="relative z-10 w-full px-6 py-5 flex items-center justify-between max-w-6xl mx-auto anim-fade-up border-b" style="border-color: var(--border);">
+      <div class="flex items-center gap-2">
+        <img src="assets/images/logo.png" alt="Synkademy Logo" class="h-10 w-auto">
+        
+        <span id="nav-brand" class="font-heading font-bold text-lg" style="color: var(--text);">Synkademy</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#features" class="text-sm font-medium hover:opacity-70 opacity-85 transition" style="color: var(--text);">Features</a> 
+      </div>
+      <button class="md:hidden" style="color:var(--text);" onclick="document.getElementById('mobile-nav').classList.toggle('hidden')"> 
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </nav>
+    <div id="mobile-nav" class="hidden md:hidden px-6 pb-4 flex flex-col gap-3 relative z-10 max-w-6xl mx-auto border-b" style="border-color: var(--border);">
+      <a href="#features" class="text-sm opacity-70" style="color:var(--text);">Features</a> 
+    </div>
+    
+    <header class="relative w-full grain-overlay overflow-hidden px-6 pt-12 pb-16 md:pt-16 md:pb-12">
+      <div class="absolute top-20 right-10 w-64 h-64 rounded-full opacity-10 blur-3xl anim-float" style="background-color:var(--accent-yellow);"></div>
+      <div class="absolute bottom-0 left-0 w-48 h-48 rounded-full opacity-8 blur-2xl anim-float delay-2" style="background-color:var(--accent-purple);"></div>
+      
+      <div class="relative z-10 max-w-4xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-6 anim-scale" style="background-color: var(--accent-yellow); color: var(--text); opacity: 0.9;">
+          <span class="w-2 h-2 rounded-full inline-block" style="background-color:var(--accent-green-dark); animation: pulse-dot 2s infinite;"></span> Merit-based project matching
+        </div>
+        <h1 id="hero-title" class="font-heading font-extrabold text-4xl md:text-6xl lg:text-7xl leading-tight mb-6 anim-fade-up delay-1" style="color: var(--text);">Find your ideal<br><span style="color:var(--accent-green-dark);">research project.</span></h1>
+        <p id="hero-subtitle" class="text-lg md:text-xl max-w-2xl mx-auto mb-8 anim-fade-up delay-2" style="color: rgba(27,27,27,0.65);">Synkademy connects ambitious students with academic supervisors through blind matching—eliminating bias and focusing purely on research merit and technical alignment.</p>
+        
+        <div class="banner-image anim-fade-up delay-3" id="banner-image" style="background: linear-gradient(135deg, var(--accent-yellow) 0%, var(--accent-green-light) 100%); background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=400&fit=crop'); background-size: cover; background-position: center;" loading="lazy"></div>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start anim-fade-up delay-4">
+          
+          <button id="student-login" class="cta-btn font-heading font-semibold px-8 py-4 rounded-xl text-base" style="background-color: var(--accent-green-dark); color: var(--bg);" onclick="window.location.href='Synkademy student\\login.html'"> Student Login → </button> 
+          
+          <button id="supervisor-login" class="cta-btn font-heading font-medium px-8 py-4 rounded-xl text-base border" style="border-color: var(--accent-purple); color: var(--accent-purple); background: transparent;" onclick="window.location.href='Synkademy Supervisor\\index.html'"> Supervisor Login </button>
+        </div>
+      </div>
+    </header>
+    
+    <section id="features" class="relative z-10 px-6 py-20 md:pt-28 max-w-6xl mx-auto mb-10">
+      <div class="text-center mb-16">
+        <h2 id="features-heading" class="font-heading font-bold text-3xl md:text-4xl mb-4 anim-fade-up" style="color: var(--text);">Why Choose Synkademy</h2>
+        <p class="max-w-xl mx-auto anim-fade-up delay-1" style="color:rgba(27,27,27,0.55);">A platform built on fairness, technical merit, and research excellence.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <div class="feature-card rounded-2xl p-7 anim-scale delay-1" style="background-color: var(--surface); border: 1px solid var(--border);">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background-color: rgba(21,127,31,0.12);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+          </div>
+          <h3 class="font-heading font-semibold text-lg mb-2" style="color:var(--text);">Blind Matching</h3>
+          <p class="text-sm leading-relaxed" style="color:rgba(27,27,27,0.55);">Project selection based purely on technical merit and research alignment, not backgrounds or identities.</p>
+        </div>
+        
+        <div class="feature-card rounded-2xl p-7 anim-scale delay-2" style="background-color: var(--surface); border: 1px solid var(--border);">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background-color: rgba(71,71,157,0.12);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 class="font-heading font-semibold text-lg mb-2" style="color:var(--text);">Privacy Protected</h3>
+          <p class="text-sm leading-relaxed" style="color:rgba(27,27,27,0.55);">All personal identifiable information is confidential until mutual selection occurs.</p>
+        </div>
+        
+        <div class="feature-card rounded-2xl p-7 anim-scale delay-3" style="background-color: var(--surface); border: 1px solid var(--border);">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background-color: rgba(21,127,31,0.12);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3 class="font-heading font-semibold text-lg mb-2" style="color:var(--text);">Quick &amp; Efficient</h3>
+          <p class="text-sm leading-relaxed" style="color:rgba(27,27,27,0.55);">Streamlined workflows get students matched with supervisors in days, not weeks.</p>
+        </div>
+        
+        <div class="feature-card rounded-2xl p-7 anim-scale delay-4" style="background-color: var(--surface); border: 1px solid var(--border);">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background-color: rgba(71,71,157,0.12);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
+          </div>
+          <h3 class="font-heading font-semibold text-lg mb-2" style="color:var(--text);">Progress Tracking</h3>
+          <p class="text-sm leading-relaxed" style="color:rgba(27,27,27,0.55);">Visualize your study habits and hit your academic goals semester by semester.</p>
+        </div>
+        
+        <div class="feature-card rounded-2xl p-7 anim-scale delay-5" style="background-color: var(--surface); border: 1px solid var(--border);">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style="background-color: rgba(21,127,31,0.12);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v7"/><path d="M20 10v7"/><path d="M10 21v-8a2 2 0 0 1 4 0v8"/><path d="M2 10h20"/><path d="M12 2 2 7l10 5 10-5-10-5Z"/></svg>
+          </div>
+          <h3 class="font-heading font-semibold text-lg mb-2" style="color:var(--text);">Multi-Institution</h3>
+          <p class="text-sm leading-relaxed" style="color:rgba(27,27,27,0.55);">Works seamlessly across departments and universities with customizable workflows.</p>
+        </div>
+        
+      </div>
+    </section>
+
+    <footer class="w-full text-center py-6 mt-auto opacity-40 hover:opacity-70 transition-opacity">
+      <p class="text-xs font-medium" style="color: var(--text);">
+        © 2026 Synkademy | Built by Group BP
+      </p>
+    </footer>
+
+  </div>
+</body>
+</html>

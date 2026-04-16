@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assigned Projects - Synkademy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    :root {
+      --sys-bg: #F9FBF9;
+      --sys-text: #1B1B1B;
+      --sys-green-dark: #157F1F;
+      --sys-green-light: #4CB963;
+      --sys-gold: #FBC02D;
+      --sys-purple: #47479D;
+      --sys-navy: #313B58;
+    }
+
+    /* Search Bar */
+    .search-container { margin-bottom: 24px; }
+    .search-input {
+      width: 100%; padding: 14px 20px; border: 2px solid #e2e8f0;
+      border-radius: var(--sv-radius); font-size: 1rem; transition: border-color 0.2s;
+    }
+    .search-input:focus { outline: none; border-color: var(--sys-purple); }
+
+    /* Banners */
+    .assigned-banner {
+      background: var(--sv-white); border-radius: var(--sv-radius); padding: 20px;
+      box-shadow: var(--sv-shadow-sm); margin-bottom: 16px;
+      border-left: 5px solid var(--sys-green-light); /* Green to show confirmed status */
+      cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .assigned-banner:hover { transform: translateY(-2px); box-shadow: var(--sv-shadow-md); }
+    .banner-title { color: var(--sys-navy); font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
+    .student-badge { color: var(--sys-purple); font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; }
+    
+    .area-chip {
+      background: rgba(76, 185, 99, 0.15); color: var(--sys-green-dark);
+      padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600;
+      margin-right: 6px; display: inline-block; margin-top: 8px;
+    }
+
+    /* Detail View & Student Card */
+    #detail-view {
+      background: var(--sv-white); padding: 30px; border-radius: var(--sv-radius);
+      box-shadow: var(--sv-shadow-sm); border-top: 6px solid var(--sys-navy);
+    }
+    .student-profile-card {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px;
+      margin-bottom: 24px; display: flex; align-items: center; gap: 16px;
+    }
+    .student-avatar {
+      width: 60px; height: 60px; background: var(--sys-gold); color: var(--sys-navy);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; font-weight: bold;
+    }
+    
+    .detail-section { margin-bottom: 24px; }
+    .detail-section h4 { color: var(--sys-navy); margin-bottom: 8px; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+    .btn-back { background: var(--sys-navy); color: var(--sv-white); border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="sv-app-layout">
+    <div id="nav-container"></div>
+    
+    <main class="sv-main-area">
+      <header class="sv-header">
+        <div>
+            <h1 class="sv-page-title">Assigned Projects</h1>
+            <p style="color: var(--sv-gray-600); font-size: 0.9rem; margin-top: 4px;">Your official supervisor roster and student contact details.</p>
+        </div>
+        <div class="sv-user-block">
+          <span class="sv-role-tag" style="background: var(--sys-gold);">Supervisor</span>
+          <span id="userName">Loading...</span>
+        </div>
+      </header>
+
+      <div id="list-view">
+        <div class="search-container">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search server for titles, tech stack, or descriptions...">
+        </div>
+        <div id="banners-container">
+          <div style="text-align:center; padding: 40px;">Loading your roster...</div>
+        </div>
+      </div>
+
+      <div id="detail-view" style="display: none;">
+        <button class="btn-back" onclick="showListView()">← Back to Roster</button>
+        
+        <h2 id="detail-title" style="color: var(--sys-navy); margin-bottom: 20px; font-size: 1.8rem;">Loading...</h2>
+        
+        <div class="student-profile-card">
+            <div class="student-avatar" id="student-initial">?</div>
+            <div>
+                <h3 id="student-name" style="margin: 0; color: var(--sys-navy); font-size: 1.2rem;">Loading Student...</h3>
+                <p id="student-number" style="margin: 4px 0 0 0; color: var(--sys-purple); font-weight: 600;"></p>
+                <p id="student-email" style="margin: 4px 0 0 0; color: var(--sv-gray-600); font-size: 0.9rem;"></p>
+            </div>
+        </div>
+
+        <div id="detail-areas" style="margin-bottom: 24px;"></div>
+        
+        <div class="detail-section">
+          <h4>Full Proposal Abstract</h4>
+          <p id="detail-abstract" style="color: var(--sys-text); line-height: 1.6;"></p>
+        </div>
+
+        <div class="detail-section">
+          <h4>Tech Stack</h4>
+          <p id="detail-tech" style="color: var(--sys-purple); font-weight: 600;"></p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/session.js"></script>
+  <script src="../js/include.js"></script>
+  <script src="../js/assigned.js"></script>
+</body>
+</html>

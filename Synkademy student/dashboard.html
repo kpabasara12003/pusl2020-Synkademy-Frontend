@@ -22,6 +22,10 @@
       --muted: #47479D;   /* accent/muted (indigo) */
       --border: #E6ECE6;
       --shadow: 0 18px 45px rgba(21, 127, 31, 0.06);
+      --sidebar: #313B58;
+      --sidebar-soft: rgba(255, 255, 255, 0.08);
+      --sidebar-text: #F9FBF9;
+      --sidebar-muted: rgba(249, 251, 249, 0.72);
     }
 
     * {
@@ -68,8 +72,8 @@
     }
 
     .sidebar {
-      background: #ffffff;
-      border-right: 1px solid var(--border);
+      background: linear-gradient(180deg, #313B58 0%, #2D3650 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
       padding: 28px 22px;
       display: flex;
       flex-direction: column;
@@ -101,11 +105,12 @@
       font-family: 'Fraunces', serif;
       font-size: 20px;
       line-height: 1.1;
+      color: var(--sidebar-text);
     }
 
     .profile {
-      background: var(--bg);
-      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: 18px;
       padding: 16px;
       display: grid;
@@ -115,11 +120,12 @@
     .profile h2 {
       font-size: 16px;
       font-weight: 600;
+      color: var(--sidebar-text);
     }
 
     .profile span {
       font-size: 13px;
-      color: var(--muted);
+      color: var(--sidebar-muted);
     }
 
     .nav {
@@ -138,41 +144,62 @@
       font-size: 14px;
       border: 1px solid transparent;
       transition: 0.25s ease;
+      color: var(--sidebar-text);
     }
 
     .nav a.active {
-      background: rgba(17, 127, 23, 0.12);
-      border-color: rgba(17, 127, 23, 0.2);
-      color: var(--green);
+      background: rgba(76, 185, 99, 0.2);
+      border-color: rgba(76, 185, 99, 0.28);
+      color: #ffffff;
     }
 
     .nav a:hover {
-      background: rgba(43, 195, 51, 0.12);
-      border-color: rgba(43, 195, 51, 0.25);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
     }
 
     .nav span {
       font-size: 12px;
-      color: var(--muted);
-      background: #ffffff;
-      border: 1px solid var(--border);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       padding: 2px 8px;
       border-radius: 999px;
     }
 
     .sidebar-footer {
       margin-top: auto;
-      background: var(--jasmine);
+      background: rgba(255, 255, 255, 0.07);
       border-radius: 16px;
       padding: 16px;
       font-size: 13px;
       line-height: 1.5;
+      color: var(--sidebar-text);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .sidebar-footer strong {
       display: block;
       margin-bottom: 6px;
-      color: var(--green);
+      color: #ffffff;
+    }
+
+    .logout-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-top: 12px;
+      background: var(--gold);
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(251, 192, 45, 0.18);
     }
 
     .main {
@@ -508,28 +535,24 @@
       <div class="brand-mark">S</div>
       <div>
         <h1>Synkademy</h1>
-        <span style="font-size:12px;color:var(--muted);">Student Dashboard</span>
+        <span style="font-size:12px;color:var(--sidebar-muted);">Student Dashboard</span>
       </div>
     </div>
 
     <div class="profile">
       <h2 id="profileName">Hi, Student</h2>
       <span id="profileStudentNo">Student Number: -</span>
-      <span id="profileArea">Research Area: Not Set</span>
     </div>
 
     <nav class="nav">
       <a class="active" href="#">Overview <span>Today</span></a>
-      <a href="proposal.html">Proposals <span>1</span></a>
-      <a href="#">Supervisor Match <span>1</span></a>
-      <a href="#">Milestones <span>4</span></a>
-      <a href="#">Messages <span>2</span></a>
-      <a href="#">Settings <span>New</span></a>
+      <a href="proposal.html">Proposal <span>1</span></a>
     </nav>
 
     <div class="sidebar-footer">
-      <strong>Blind Match Mode</strong>
-      Supervisor details reveal after confirmation to keep selections fair and unbiased.
+      <strong>Account</strong>
+      <span>End your account access when you are done.</span>
+      <button class="logout-btn" type="button" onclick="logout()">Log Out</button>
     </div>
   </aside>
 
@@ -541,10 +564,6 @@
       </div>
 
       <div class="actions">
-        <div class="search">
-          <input type="text" placeholder="Search proposals or supervisors">
-        </div>
-        <button class="pill">Save Draft</button>
         <a class="pill primary" id="newProposalBtn" href="submit_N.html">New Proposal</a>
       </div>
     </header>
@@ -560,79 +579,6 @@
         <p class="stat-value" id="proposalCount">1</p>
         <p class="stat-meta">Only one proposal allowed</p>
       </div>
-      <div class="stat-card">
-        <p class="stat-title">Supervisor Matches</p>
-        <p class="stat-value">1</p>
-        <p class="stat-meta">Awaiting confirmation</p>
-      </div>
-      <div class="stat-card">
-        <p class="stat-title">Milestones</p>
-        <p class="stat-value">4</p>
-        <p class="stat-meta">Next due in 6 days</p>
-      </div>
-    </section>
-
-    <section class="grid">
-      <div class="panel">
-        <h3>Approval Timeline</h3>
-        <div class="timeline">
-          <div class="timeline-item">
-            <span class="dot"></span>
-            <div>
-              <p>Proposal submitted: "Smart Campus Navigation"</p>
-              <span>April 03, 2026 - Status: Pending Review</span>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <span class="dot"></span>
-            <div>
-              <p>Supervisor interest received from Web Systems Pool</p>
-              <span>April 06, 2026 - Awaiting confirmation</span>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <span class="dot"></span>
-            <div>
-              <p>Identity reveal scheduled upon confirmation</p>
-              <span>April 10, 2026 - Planned</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel status">
-        <h3>Matching Progress</h3>
-        <div class="status-box">
-          <strong>Blind Review Stage</strong>
-          Supervisor is reviewing your proposal details without identity data.
-        </div>
-        <div>
-          <div class="status-progress"><span></span></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px;">68% toward match confirmation</p>
-        </div>
-        <button class="pill primary">Send Follow Up</button>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h3>Quick Actions</h3>
-      <div class="cards">
-        <div class="mini-card">
-          <span class="tag">RESEARCH STACK</span>
-          <strong>Update Tech Stack</strong>
-          <p style="font-size:13px;color:var(--muted);">Refine tools and frameworks to align with supervisor focus.</p>
-        </div>
-        <div class="mini-card">
-          <span class="tag">DOCUMENTS</span>
-          <strong>Upload Proposal PDF</strong>
-          <p style="font-size:13px;color:var(--muted);">Attach diagrams, models, or feasibility studies.</p>
-        </div>
-        <div class="mini-card">
-          <span class="tag">COMMUNICATION</span>
-          <strong>Message Module Leader</strong>
-          <p style="font-size:13px;color:var(--muted);">Clarify review timeline or resource requirements.</p>
-        </div>
-      </div>
     </section>
 
     <section class="panel" id="proposalsSection">
@@ -646,18 +592,9 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody id="proposalTableBody">
-          <tr>
-            <td>Smart Campus Navigation</td>
-            <td>Web Development</td>
-            <td>April 03, 2026</td>
-            <td><span class="status-pill review">Under Review</span></td>
-          </tr>
-        </tbody>
+        <tbody id="proposalTableBody"></tbody>
       </table>
     </section>
-
-    <div class="footer">Copyright 2026 Synkademy Student Application</div>
   </main>
 
     <!-- scripts -->
