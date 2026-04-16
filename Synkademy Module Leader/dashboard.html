@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Synkademy | Module Leader</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard_styles.css">
 </head>
+<div id="global-loader">
+        <div class="spinner"></div>
+    </div>
 <body>
 
     <header class="app-header">
@@ -16,9 +19,9 @@
             </div>
             
             <nav class="main-nav">
-                <a href="#" class="nav-item active">Dashboard</a>
-                <a href="#" class="nav-item">User Management</a>
-                <a href="#" class="nav-item">Research Areas</a>
+                <a href="./dashboard.html" class="nav-item active">Dashboard</a>
+                <a href="./users.html" class="nav-item">User Management</a>
+                <a href="./metadata.html" class="nav-item">Meta Data</a>
             </nav>
 
             <div class="user-menu">
@@ -285,7 +288,16 @@
         return null;
     }
 
+    function showLoader() {
+        document.getElementById('global-loader').style.display = 'flex';
+    }
+
+    function hideLoader() {
+        document.getElementById('global-loader').style.display = 'none';
+    }
+
     async function loadDashboardData() {
+        showLoader();
         try {
             const response = await fetch("http://localhost:5037/api/ModuleLeader/dashboard");
             
@@ -321,6 +333,8 @@
 
         } catch (error) {
             console.error("Error loading dashboard:", error);
+        } finally {
+            hideLoader();
         }
     }
 

@@ -1,0 +1,295 @@
+:root {
+    --bg-body: #F8FAFC; 
+    --bg-surface: #FFFFFF;
+    --border-color: #E2E8F0;
+    
+    --text-primary: #0F172A;
+    --text-secondary: #64748B;
+    
+    --brand-primary: #1E293B; 
+    --brand-accent: #2563EB; 
+    
+    --status-success: #10B981;
+    --status-success-bg: #D1FAE5;
+    --status-warning: #F59E0B;
+    --status-warning-bg: #FEF3C7;
+    
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+.text-muted { color: var(--text-secondary); }
+.text-small { font-size: 0.875rem; }
+.fw-bold { font-weight: 600; }
+.text-right { text-align: right !important; }
+.text-success { color: var(--status-success); }
+.text-warning { color: var(--status-warning); }
+
+.app-header {
+    background-color: var(--brand-primary);
+    color: #FFFFFF;
+    border-bottom: 1px solid var(--brand-primary);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.brand-logo {
+    background-color: var(--brand-accent);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.brand-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+}
+
+.main-nav {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.nav-item {
+    color: #94A3B8;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.nav-item:hover {
+    color: #FFFFFF;
+    background-color: rgba(255,255,255,0.1);
+}
+
+.nav-item.active {
+    color: #FFFFFF;
+    background-color: rgba(255,255,255,0.15);
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.user-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: #94A3B8;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--brand-accent);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.btn-primary:hover { background-color: #1D4ED8; }
+
+.btn-secondary {
+    background-color: #FFFFFF;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.btn-secondary:hover { background-color: #F8FAFC; }
+
+.btn-outline {
+    background-color: transparent;
+    color: #E2E8F0;
+    border: 1px solid #475569;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.btn-outline:hover {
+    background-color: #334155;
+    color: #FFFFFF;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: var(--brand-accent);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.btn-text:hover { text-decoration: underline; }
+
+.workspace {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.data-panel {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.panel-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.panel-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    margin-bottom: -1px; 
+}
+
+.tab-btn:hover { color: var(--brand-primary); }
+.tab-btn.active { color: var(--brand-accent); border-bottom-color: var(--brand-accent); }
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.search-input, .filter-dropdown {
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: #F8FAFC;
+    transition: all 0.2s;
+}
+
+.search-input:focus, .filter-dropdown:focus {
+    outline: none;
+    border-color: var(--brand-accent);
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+#global-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(248, 250, 252, 0.7); 
+    backdrop-filter: blur(4px); 
+    z-index: 9999; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #E2E8F0; 
+    border-top: 4px solid var(--brand-accent); 
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
