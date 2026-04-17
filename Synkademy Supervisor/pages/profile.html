@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supervisor Profile - Synkademy</title>
+  <script src="../js/session.js"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="../js/auth.js"></script> 
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F9FBF9;
+      --text: #1B1B1B;
+      --accent-yellow: #FBC02D;
+      --accent-green-dark: #157F1F;
+      --accent-green-light: #4CB963;
+      --accent-purple: #47479D;
+      --surface: #FFFFFF;
+      --border: #E8EAE8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .font-heading { font-family: 'Sora', sans-serif; }
+    .font-body { font-family: 'DM Sans', sans-serif; }
+
+    @keyframes fadeUp { 
+        from { opacity: 0; transform: translateY(20px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+    .anim-fade-up { animation: fadeUp 0.6s ease-out both; }
+  </style>
+</head>
+<body class="font-body h-full flex flex-col items-center justify-center" style="background-color: var(--bg); color: var(--text);">
+
+  <div class="w-full max-w-md px-6 anim-fade-up">
+    
+    <div class="rounded-3xl p-8 text-center shadow-sm relative overflow-hidden mb-4" style="background-color: var(--surface); border: 1px solid var(--border);">
+      
+      <div class="absolute -top-10 -right-10 w-32 h-32 rounded-full opacity-10 blur-2xl" style="background-color: var(--accent-green-dark);"></div>
+      
+      <div class="mx-auto w-20 h-20 rounded-2xl flex items-center justify-center mb-6 relative z-10 shadow-sm" style="background: linear-gradient(135deg, var(--accent-green-light) 0%, var(--accent-green-dark) 100%);">
+        <i data-lucide="shield-check" style="width: 36px; height: 36px; color: var(--surface);"></i>
+      </div>
+
+      <div class="relative z-10 mb-8">
+        <h2 id="profileName" class="font-heading font-bold text-2xl mb-1" style="color: var(--text);">Loading...</h2>
+        <p class="text-sm font-medium px-3 py-1 inline-block rounded-full mb-3" style="background-color: rgba(71,71,157,0.1); color: var(--accent-purple);">
+          Academic Supervisor
+        </p>
+        <p id="profileEmail" class="text-sm" style="color: rgba(27,27,27,0.6);">Loading...</p>
+      </div>
+
+      <hr class="mb-6 relative z-10" style="border-color: var(--border);">
+
+      <div class="flex items-center justify-center gap-2 relative z-10">
+        <i data-lucide="help-circle" style="width: 16px; height: 16px; color: rgba(27,27,27,0.4);"></i>
+        <p class="text-xs font-medium" style="color: rgba(27,27,27,0.5);">
+          Need help? <a href="#" class="transition-colors hover:underline" style="color: var(--accent-purple);">Contact a module leader.</a>
+        </p>
+      </div>
+    </div>
+
+    <button id="logoutBtn" class="w-full py-3 px-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all hover:bg-red-50 text-red-600 shadow-sm" style="background-color: var(--surface); border: 1px solid rgba(220, 38, 38, 0.2);">
+      <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+      Log Out
+    </button>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const nameEl = document.getElementById('profileName');
+      const emailEl = document.getElementById('profileEmail');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+
+      try {
+        if (typeof requireAuth !== 'function') {
+            console.error("requireAuth is not defined! Did you forget to link your auth.js script?");
+            throw new Error("Missing auth script");
+        }
+
+        const user = requireAuth();
+        console.log("Session Data Found:", user);
+
+        if (user) {
+          nameEl.textContent = user.fullName || "Name not in session";
+          emailEl.textContent = user.email || "Email not provided in session"; 
+        } else {
+          nameEl.textContent = "Not Logged In";
+          emailEl.textContent = "No active session found.";
+        }
+      } catch (err) {
+        console.error("Session retrieval error:", err);
+        nameEl.textContent = "Not Logged In";
+        emailEl.textContent = "Please log in to view your profile.";
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          const isConfirmed = confirm("Are you sure you want to log out?");
+          
+          if (isConfirmed) {
+            logout(); 
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
