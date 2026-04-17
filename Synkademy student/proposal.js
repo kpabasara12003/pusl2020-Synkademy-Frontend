@@ -183,20 +183,20 @@ function renderProposal(project) {
     renderChips("proposalTags", project.tags);
     updateSidebarFooter(project);
 
-    setPageStatus(`Loaded proposal #${project.id}`, "success");
+    setPageStatus("Proposal details loaded.", "success");
 
     const supervisorPanel = document.getElementById("supervisorPanel");
     if (supervisorPanel) supervisorPanel.classList.add("hidden");
 
     if (canRevealSupervisor(project)) {
         const supervisorId = getSupervisorId(project) || 2;
-        setPageStatus(`Loaded proposal #${project.id}. Loading supervisor #${supervisorId}...`, "loading");
+        setPageStatus("Loading supervisor details...", "loading");
         fetchSupervisor(supervisorId).then(svData => {
             renderSupervisor(project, svData);
-            setPageStatus(`Loaded proposal #${project.id} and supervisor #${supervisorId}.`, "success");
+            setPageStatus("Supervisor details loaded.", "success");
         });
     } else {
-        setPageStatus(`Loaded proposal #${project.id}. Supervisor hidden until matched.`, "success");
+        setPageStatus("Supervisor hidden until matched.", "success");
     }
 }
 
