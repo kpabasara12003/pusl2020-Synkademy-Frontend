@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const user = getSession();
   if (user && window.location.pathname.includes("index.html")) {
-    window.location.href = "pages/dashboard.html";
+    window.location.replace("pages/dashboard.html");
   }
 });
 
