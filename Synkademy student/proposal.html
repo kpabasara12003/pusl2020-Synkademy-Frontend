@@ -486,6 +486,46 @@
       display: none !important;
     }
 
+    .proposal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .action-btn {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+      background: #ffffff;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .action-btn.edit {
+      color: var(--sidebar);
+      border-color: rgba(49, 59, 88, 0.2);
+      background: rgba(49, 59, 88, 0.08);
+    }
+
+    .action-btn.delete {
+      color: #b00020;
+      border-color: rgba(176, 0, 32, 0.24);
+      background: rgba(176, 0, 32, 0.08);
+    }
+
+    .action-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .loading {
       color: #666;
       font-size: 14px;
@@ -663,6 +703,11 @@
         </div>
 
       </div>
+    </section>
+
+    <section class="proposal-actions">
+      <button id="editProposalBtn" class="action-btn edit" type="button">Edit</button>
+      <button id="deleteProposalBtn" class="action-btn delete" type="button">Delete</button>
     </section>
 
     <div class="panel" id="proposalEmptyState" style="display:none;">
