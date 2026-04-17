@@ -1,7 +1,8 @@
 const API_BASE_URL = "http://localhost:5037";
 const PROJECT_API_BASE = `${API_BASE_URL}/api/Projects`;
 const STUDENT_API_BASE = `${API_BASE_URL}/api/Students`;
-const SUPERVISOR_API_BASE = `${API_BASE_URL}/api/Supervisors`;
+const SUPERVISOR_API_BASE = `${API_BASE_URL}/api/Supervisor`;
+let currentProposal = null;
 
 function readCookie(name) {
     const match = document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)");
@@ -28,6 +29,28 @@ function setPageStatus(message, type = "loading") {
     if (!el) return;
     el.className = `page-status ${type}`;
     el.innerText = message;
+}
+
+function setActionButtonsEnabled(enabled) {
+    const editBtn = document.getElementById("editProposalBtn");
+    const deleteBtn = document.getElementById("deleteProposalBtn");
+    if (editBtn) editBtn.disabled = !enabled;
+    if (deleteBtn) deleteBtn.disabled = !enabled;
+}
+
+function updateActionButtonsVisibility(project) {
+    const actionsPanel = document.querySelector(".proposal-actions");
+    if (!actionsPanel) return;
+
+    if (!project) {
+        actionsPanel.classList.add("hidden");
+        setActionButtonsEnabled(false);
+        return;
+    }
+
+    const canEditOrDelete = !canRevealSupervisor(project);
+    actionsPanel.classList.toggle("hidden", !canEditOrDelete);
+    setActionButtonsEnabled(canEditOrDelete);
 }
 
 function pickProjectData(payload) {
@@ -156,10 +179,26 @@ function renderSupervisor(project, supervisor) {
 }
 
 function renderProposal(project) {
+    currentProposal = project || null;
+    updateActionButtonsVisibility(project);
+
     const emptyState = document.getElementById("proposalEmptyState");
     if (!project) {
         setPageStatus("No proposal found.", "error");
         if (emptyState) emptyState.style.display = "block";
+        document.getElementById("proposalTitle").innerText = "No proposal found";
+        document.getElementById("proposalSubtitle").innerText = "Create a project proposal to continue.";
+        document.getElementById("proposalId").innerText = "-";
+        document.getElementById("proposalShort").innerText = "-";
+        document.getElementById("proposalAbstract").innerText = "-";
+        document.getElementById("proposalTech").innerText = "-";
+        document.getElementById("proposalStatus").innerText = "-";
+        document.getElementById("proposalBadge").innerText = "Proposal";
+        document.getElementById("proposalCreated").innerText = "-";
+        renderChips("proposalResearchAreas", []);
+        renderChips("proposalTags", []);
+        const supervisorPanel = document.getElementById("supervisorPanel");
+        if (supervisorPanel) supervisorPanel.classList.add("hidden");
         return;
     }
 
@@ -200,6 +239,64 @@ function renderProposal(project) {
     }
 }
 
+async function deleteCurrentProposal() {
+    if (!currentProposal?.id) return;
+    if (canRevealSupervisor(currentProposal)) {
+        setPageStatus("Matched projects cannot be deleted.", "error");
+        return;
+    }
+
+    const ok = window.confirm("Are you sure you want to delete this project?");
+    if (!ok) return;
+
+    setActionButtonsEnabled(false);
+    setPageStatus("Deleting project...", "loading");
+
+    try {
+        const studentId =
+            currentProposal?.studentId ??
+            currentProposal?.studentID ??
+            sessionStorage.getItem("studentId") ??
+            readCookie("userId");
+
+        const deleteUrl = studentId
+            ? `${PROJECT_API_BASE}/${encodeURIComponent(currentProposal.id)}?studentId=${encodeURIComponent(studentId)}`
+            : `${PROJECT_API_BASE}/${encodeURIComponent(currentProposal.id)}`;
+
+        const response = await fetch(deleteUrl, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            throw new Error("Delete failed");
+        }
+
+        renderProposal(null);
+        setPageStatus("Project deleted successfully.", "success");
+    } catch (error) {
+        setActionButtonsEnabled(true);
+        setPageStatus("Failed to delete project.", "error");
+    }
+}
+
+function editCurrentProposal() {
+    if (!currentProposal?.id) return;
+    if (canRevealSupervisor(currentProposal)) {
+        setPageStatus("Matched projects cannot be edited.", "error");
+        return;
+    }
+    sessionStorage.setItem("editProjectId", String(currentProposal.id));
+    window.location.href = `edit_proposal.html?projectId=${encodeURIComponent(currentProposal.id)}`;
+}
+
+function setupProposalActions() {
+    const editBtn = document.getElementById("editProposalBtn");
+    const deleteBtn = document.getElementById("deleteProposalBtn");
+
+    if (editBtn) editBtn.addEventListener("click", editCurrentProposal);
+    if (deleteBtn) deleteBtn.addEventListener("click", deleteCurrentProposal);
+}
+
 async function initializeProposalPage() {
     if (!candidateIds().length) {
         window.location.href = "login.html";
@@ -215,3 +312,4 @@ async function initializeProposalPage() {
 }
 
 document.addEventListener("DOMContentLoaded", initializeProposalPage);
+document.addEventListener("DOMContentLoaded", setupProposalActions);

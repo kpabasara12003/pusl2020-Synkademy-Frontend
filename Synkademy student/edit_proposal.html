@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Proposal | Synkademy</title>
+  <link rel="stylesheet" href="submit_N.css">
+  <style>
+    .checkbox-container {
+      max-height: 200px;
+      overflow-y: auto;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px;
+      transition: background 0.2s;
+    }
+    .checkbox-item:hover { background: #f5f5f5; }
+    .checkbox-item input { cursor: pointer; width: 16px; height: 16px; }
+  </style>
+</head>
+<body>
+  <a class="back-home" href="proposal.html">Back to Proposal</a>
+
+  <div class="container">
+    <div class="hero">
+      <div class="hero-text">
+        <div class="hero-badge">Edit Mode</div>
+        <h1>Edit Project</h1>
+        <p>Update your existing project details.</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="left">
+        <div class="card">
+          <div class="card-header"><h3>Project Details</h3></div>
+          <div class="field-group">
+            <label class="field-label">Project Title *</label>
+            <input type="text" id="proj-title" placeholder="e.g. Smart Campus Navigation">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Short Description *</label>
+            <textarea id="proj-short" rows="2" placeholder="One sentence summary..."></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Abstract * (Min 100 chars)</label>
+            <textarea id="proj-abstract" rows="4" placeholder="Detailed breakdown..."></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Tech Stack</label>
+            <input type="text" id="techStack" placeholder="e.g. Flutter, Firebase, C#">
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="status-card">
+          <p class="cat-label" style="margin-top:15px; font-weight:600;">Research Areas (Select Multiple)</p>
+          <div id="researchList" class="checkbox-container">Loading...</div>
+
+          <p class="cat-label" style="margin-top:15px; font-weight:600;">Tags (Select Multiple)</p>
+          <div id="tagsList" class="checkbox-container">Loading...</div>
+
+          <button id="updateBtn" class="submit-btn" style="margin-top:20px;" onclick="handleUpdate()">Update Project</button>
+          <div id="toast" class="success-toast" style="display:none; margin-top:10px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const API_BASE = "http://localhost:5037";
+  const params = new URLSearchParams(window.location.search);
+  const projectId = params.get("projectId") || sessionStorage.getItem("editProjectId");
+
+  function getCookie(name) {
+    const cookies = document.cookie.split("; ");
+    for (const c of cookies) {
+      const [key, val] = c.split("=");
+      if (key === name) return decodeURIComponent(val);
+    }
+    return null;
+  }
+
+  function getLoggedInStudentId() {
+    return sessionStorage.getItem("studentId") || getCookie("userId");
+  }
+
+  function pickProjectData(payload) {
+    if (!payload) return null;
+    if (Array.isArray(payload)) return payload.length ? payload[0] : null;
+    if (Array.isArray(payload.value)) return payload.value.length ? payload.value[0] : null;
+    if (payload.data && typeof payload.data === "object") return payload.data;
+    return payload;
+  }
+
+  function normalizeSelections(values) {
+    const ids = [];
+    const names = [];
+    if (!Array.isArray(values)) return { ids, names };
+
+    values.forEach(item => {
+      if (typeof item === "number") {
+        ids.push(item);
+        return;
+      }
+
+      if (typeof item === "string") {
+        const maybeId = parseInt(item, 10);
+        if (Number.isFinite(maybeId) && String(maybeId) === item.trim()) {
+          ids.push(maybeId);
+        } else if (item.trim()) {
+          names.push(item.trim().toLowerCase());
+        }
+        return;
+      }
+
+      if (item && typeof item === "object") {
+        const itemId = parseInt(item.id ?? item.Id, 10);
+        const itemName = String(item.name ?? item.Name ?? "").trim().toLowerCase();
+        if (Number.isFinite(itemId)) ids.push(itemId);
+        if (itemName) names.push(itemName);
+      }
+    });
+
+    return {
+      ids,
+      names: Array.from(new Set(names))
+    };
+  }
+
+  async function loadCheckboxData(endpoint, containerId, className, selected = { ids: [], names: [] }) {
+    const container = document.getElementById(containerId);
+    const selectedIdSet = new Set((selected.ids || []).map(Number));
+    const selectedNameSet = new Set((selected.names || []).map(name => String(name).trim().toLowerCase()));
+    try {
+      const res = await fetch(API_BASE + endpoint);
+      const data = await res.json();
+      container.innerHTML = "";
+
+      data.forEach(item => {
+        const itemId = parseInt(item.id ?? item.Id, 10);
+        const itemName = String(item.name ?? item.Name ?? "").trim().toLowerCase();
+        const isChecked = selectedIdSet.has(itemId) || (itemName && selectedNameSet.has(itemName));
+        const checked = isChecked ? "checked" : "";
+        const label = document.createElement("label");
+        label.className = "checkbox-item";
+        label.innerHTML = `
+          <input type="checkbox" class="${className}" value="${itemId}" ${checked}>
+          <span>${item.name || item.Name}</span>
+        `;
+        container.appendChild(label);
+      });
+    } catch (err) {
+      container.innerHTML = '<p style="color:red">Failed to load options.</p>';
+    }
+  }
+
+  async function fetchProjectById(id) {
+    const response = await fetch(`${API_BASE}/api/Projects/${encodeURIComponent(id)}`);
+    if (!response.ok) return null;
+    const data = await response.json();
+    return pickProjectData(data);
+  }
+
+  async function fetchProjectByStudent(studentId) {
+    if (!studentId) return null;
+    const response = await fetch(`${API_BASE}/api/Projects/student/${encodeURIComponent(studentId)}`);
+    if (!response.ok) return null;
+    const data = await response.json();
+    return pickProjectData(data);
+  }
+
+  function fillProjectForm(project) {
+    document.getElementById("proj-title").value = project.title || project.projectTitle || "";
+    document.getElementById("proj-short").value = project.shortDescription || project.shortDesc || "";
+    document.getElementById("proj-abstract").value = project.abstract || project.projectAbstract || "";
+    document.getElementById("techStack").value = project.techStack || project.technologyStack || "";
+  }
+
+  async function initializeEditPage() {
+    if (!projectId) {
+      showToast("No project selected for editing.", "error");
+      return;
+    }
+
+    let project = await fetchProjectById(projectId);
+    if (!project) {
+      project = await fetchProjectByStudent(getLoggedInStudentId());
+    }
+
+    if (!project) {
+      showToast("Failed to load project details.", "error");
+      return;
+    }
+
+    fillProjectForm(project);
+
+    const selectedResearchAreas = normalizeSelections(
+      project.researchAreas || project.researchAreaIds || project.researchAreaNames || []
+    );
+    const selectedTags = normalizeSelections(
+      project.tags || project.tagIds || project.tagNames || []
+    );
+
+    await Promise.all([
+      loadCheckboxData("/api/ResearchAreas", "researchList", "research-item", selectedResearchAreas),
+      loadCheckboxData("/api/Tags", "tagsList", "tag-item", selectedTags)
+    ]);
+  }
+
+  async function handleUpdate() {
+    if (!projectId) {
+      showToast("Missing project id.", "error");
+      return;
+    }
+
+    const studentId = parseInt(getLoggedInStudentId(), 10);
+    const payload = {
+      studentId,
+      title: document.getElementById("proj-title").value.trim(),
+      shortDescription: document.getElementById("proj-short").value.trim(),
+      abstract: document.getElementById("proj-abstract").value.trim(),
+      techStack: document.getElementById("techStack").value.trim(),
+      researchAreas: Array.from(document.querySelectorAll(".research-item:checked")).map(cb => parseInt(cb.value, 10)),
+      tags: Array.from(document.querySelectorAll(".tag-item:checked")).map(cb => parseInt(cb.value, 10))
+    };
+
+    if (!payload.studentId || !payload.title || payload.abstract.length < 100) {
+      showToast("Please check login, title and abstract length.", "error");
+      return;
+    }
+
+    if (!payload.researchAreas.length) {
+      showToast("Select at least one research area.", "error");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/api/Projects/${encodeURIComponent(projectId)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const msg = await response.text();
+        showToast(`Error: ${msg}`, "error");
+        return;
+      }
+
+      showToast("Project successfully updated!", "success");
+      setTimeout(() => {
+        window.location.href = "proposal.html";
+      }, 1200);
+    } catch (error) {
+      showToast("Network error. Check API server.", "error");
+    }
+  }
+
+  function showToast(msg, type) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.className = `success-toast ${type}`;
+    toast.style.display = "block";
+  }
+
+  document.addEventListener("DOMContentLoaded", initializeEditPage);
+</script>
+</body>
+</html>
