@@ -1,7 +1,7 @@
 const API_BASE_URL = "http://localhost:5037";
 const PROJECT_API_BASE = `${API_BASE_URL}/api/Projects`;
 const STUDENT_API_BASE = `${API_BASE_URL}/api/Students`;
-const SUPERVISOR_API_BASE = `${API_BASE_URL}/api/Supervisors`;
+const SUPERVISOR_API_BASE = `${API_BASE_URL}/api/Supervisor`;
 
 function readCookie(name) {
     const match = document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)");
